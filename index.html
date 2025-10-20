@@ -26,6 +26,7 @@
             color: var(--color-text-dark);
             margin: 0;
             padding: 0;
+            /* 1. จัดกึ่งกลางกรอบแอปพลิเคชันบน Desktop */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -35,15 +36,35 @@
 
         .container {
             width: 100%;
-            max-width: 500px;
             box-sizing: border-box;
             background-color: var(--color-card);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            
+            /* 2. กำหนดพื้นที่ 9:16 สำหรับ Desktop Frame */
+            /* Max width ของกรอบ (9 หน่วย) */
+            max-width: 400px; 
+            /* Max height ของกรอบ (16 หน่วย) = 400 / 9 * 16 */
+            max-height: 711px; 
+            
+            /* ให้ยืดเต็มความสูง viewport บนอุปกรณ์มือถือจริง */
             min-height: 100vh;
+            
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
             padding: 0;
+            
+            /* Ensure content fits within the max-height on desktop */
+            height: 100%;
+        }
+        
+        /* Media Query: บังคับใช้ความสูงสูงสุด 711px เมื่อหน้าจอใหญ่พอ */
+        @media (min-width: 401px) {
+            .container {
+                /* บน Desktop, ความสูงจะถูกจำกัดที่ 711px เพื่อรักษา 9:16 */
+                height: 711px;
+                min-height: 711px;
+            }
         }
 
         /* Header */
@@ -102,9 +123,9 @@
 
         /* --- Game Screen --- */
         #game-screen {
-            /* 2. ปรับความสูงของพื้นที่บทเรียน: ให้ใช้พื้นที่ที่เหลืออย่างยืดหยุ่น */
-            min-height: calc(100vh - 8rem); /* 8rem คือพื้นที่โดยประมาณของ Header และ Footer */
             justify-content: flex-start;
+            /* แก้ไขเพื่อให้ส่วนเกมยืดเต็มพื้นที่ที่เหลือในกรอบ 9:16 */
+            flex-grow: 1; 
         }
         #game-screen .top-content {
             flex-grow: 1;
@@ -153,7 +174,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr; 
             gap: 15px;
-            flex-grow: 1; /* ทำให้ส่วนนี้ขยายเต็มพื้นที่ที่เหลือ */
+            flex-grow: 1; 
             padding-bottom: 1rem;
         }
         .option-btn {
@@ -212,7 +233,6 @@
             margin-top: 1.5rem;
             padding-top: 1rem;
             border-top: 1px solid #ECEFF1;
-            /* ป้องกันไม่ให้ Footer ยืดเกินพื้นที่ */
             flex-shrink: 0; 
         }
         #next-btn {
@@ -382,7 +402,7 @@
                 { word: "egg", icon: "🥚", audio: "egg.mp3" },
                 { word: "cheese", icon: "🧀", audio: "cheese.mp3" },
                 { word: "carrot", icon: "🥕", audio: "carrot.mp3" },
-                { word: "soup", icon: "🥣", audio: "soup.mp3" },
+                { word: "soup", icon: "🥣", "audio": "soup.mp3" },
                 { word: "cake", icon: "🎂", audio: "cake.mp3" },
                 { word: "water", icon: "💧", audio: "water.mp3" },
                 { word: "cookie", icon: "🍪", audio: "cookie.mp3" },
@@ -447,7 +467,6 @@
         /** 1. แก้ไขปัญหาเสียงคำศัพท์: ใช้ Promise เพื่อลองเล่นเสียงและจัดการข้อผิดพลาด */
         function playWordAudio() {
             wordAudio.currentTime = 0;
-            // ใช้ Promise เพื่อจัดการการเล่นเสียงที่อาจถูกบล็อกโดยเบราว์เซอร์
             const playPromise = wordAudio.play();
             
             if (playPromise !== undefined) {
@@ -620,7 +639,6 @@
                 // Highlight the correct answer
                 const correctAnswerButton = document.querySelector(`.option-btn[data-is-correct="true"]`);
                 if (correctAnswerButton) {
-                    // ใส่ class correct เพื่อแสดงคำตอบที่ถูก
                     correctAnswerButton.classList.add('correct');
                 }
             }
