@@ -29,20 +29,20 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            /* FIX: ใช้ 100dvh เพื่อแก้ปัญหาแถบนำทางของเบราว์เซอร์มือถือ */
+            /* **การแก้ไข: ใช้ 100dvh เพื่อให้พอดีขอบล่างของจอแนวตั้ง** */
             min-height: 100dvh; 
             text-align: center;
         }
 
         .container {
             width: 100%;
-            /* ปรับ Max-width ให้เท่ากับโค้ด Homophone */
+            /* **ความกว้างสูงสุด 500px (ตามโค้ด Homophone เดิม)** */
             max-width: 500px; 
             box-sizing: border-box;
             background-color: var(--color-card);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             
-            /* FIX: ใช้ 100dvh เพื่อความสูงเต็มจอแนวตั้งที่ถูกต้อง */
+            /* **ความสูงเต็มจอที่ถูกต้อง** */
             height: 100dvh;
             min-height: 100dvh;
             
