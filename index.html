@@ -29,22 +29,22 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            /* body ใช้ความสูง 100% ของ viewport */
-            min-height: 100vh; 
+            /* ใช้ 100dvh เพื่อแก้ปัญหาแถบนำทางของเบราว์เซอร์มือถือ (โดยเฉพาะ iOS) */
+            min-height: 100dvh; 
             text-align: center;
         }
 
         .container {
             width: 100%;
-            /* จำกัดความกว้างบน Desktop เพื่อให้ดูเหมือนมือถือ */
-            max-width: 500px; 
+            /* ปรับ Max-width ให้กว้างขึ้นเล็กน้อยเพื่อจำลองหน้าจอ Max */
+            max-width: 430px; 
             box-sizing: border-box;
             background-color: var(--color-card);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             
-            /* การปรับหลัก: ทำให้ Container ใช้พื้นที่แนวตั้งเต็ม 100% เสมอ */
-            height: 100vh;
-            min-height: 100vh;
+            /* การปรับหลัก: ใช้ 100dvh เพื่อความสูงที่ถูกต้องบนมือถือ */
+            height: 100dvh;
+            min-height: 100dvh;
             
             display: flex;
             flex-direction: column;
@@ -58,7 +58,6 @@
             color: var(--color-text-light);
             padding: 1.5rem 1rem;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-            /* ป้องกัน Header ย่อ/ขยาย */
             flex-shrink: 0; 
         }
         header h1 {
@@ -70,7 +69,6 @@
         .screen {
             padding: 1rem;
             display: none; 
-            /* ทำให้ส่วนนี้ยืดเต็มพื้นที่ที่เหลือของ 100vh */
             flex-grow: 1; 
             flex-direction: column;
             justify-content: space-between;
