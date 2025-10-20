@@ -26,53 +26,40 @@
             color: var(--color-text-dark);
             margin: 0;
             padding: 0;
-            /* 1. จัดกึ่งกลางกรอบแอปพลิเคชันบน Desktop */
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            /* body ใช้ความสูง 100% ของ viewport */
+            min-height: 100vh; 
             text-align: center;
         }
 
         .container {
             width: 100%;
+            /* จำกัดความกว้างบน Desktop เพื่อให้ดูเหมือนมือถือ */
+            max-width: 500px; 
             box-sizing: border-box;
             background-color: var(--color-card);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             
-            /* 2. กำหนดพื้นที่ 9:16 สำหรับ Desktop Frame */
-            /* Max width ของกรอบ (9 หน่วย) */
-            max-width: 400px; 
-            /* Max height ของกรอบ (16 หน่วย) = 400 / 9 * 16 */
-            max-height: 711px; 
-            
-            /* ให้ยืดเต็มความสูง viewport บนอุปกรณ์มือถือจริง */
+            /* การปรับหลัก: ทำให้ Container ใช้พื้นที่แนวตั้งเต็ม 100% เสมอ */
+            height: 100vh;
             min-height: 100vh;
             
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
             padding: 0;
-            
-            /* Ensure content fits within the max-height on desktop */
-            height: 100%;
         }
         
-        /* Media Query: บังคับใช้ความสูงสูงสุด 711px เมื่อหน้าจอใหญ่พอ */
-        @media (min-width: 401px) {
-            .container {
-                /* บน Desktop, ความสูงจะถูกจำกัดที่ 711px เพื่อรักษา 9:16 */
-                height: 711px;
-                min-height: 711px;
-            }
-        }
-
         /* Header */
         header {
             background-color: var(--color-primary);
             color: var(--color-text-light);
             padding: 1.5rem 1rem;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            /* ป้องกัน Header ย่อ/ขยาย */
+            flex-shrink: 0; 
         }
         header h1 {
             font-size: 1.8rem;
@@ -83,7 +70,8 @@
         .screen {
             padding: 1rem;
             display: none; 
-            flex-grow: 1;
+            /* ทำให้ส่วนนี้ยืดเต็มพื้นที่ที่เหลือของ 100vh */
+            flex-grow: 1; 
             flex-direction: column;
             justify-content: space-between;
         }
@@ -124,7 +112,6 @@
         /* --- Game Screen --- */
         #game-screen {
             justify-content: flex-start;
-            /* แก้ไขเพื่อให้ส่วนเกมยืดเต็มพื้นที่ที่เหลือในกรอบ 9:16 */
             flex-grow: 1; 
         }
         #game-screen .top-content {
