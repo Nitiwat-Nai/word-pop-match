@@ -29,20 +29,20 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            /* **การแก้ไข:** ใช้ 100dvh เพื่อแก้ปัญหาแถบนำทางของเบราว์เซอร์มือถือ (iOS/Android) */
+            /* FIX: ใช้ 100dvh เพื่อแก้ปัญหาแถบนำทางของเบราว์เซอร์มือถือ */
             min-height: 100dvh; 
             text-align: center;
         }
 
         .container {
             width: 100%;
-            /* **การแก้ไข:** ปรับ Max-width ให้เท่ากับโค้ด Homophone */
+            /* ปรับ Max-width ให้เท่ากับโค้ด Homophone */
             max-width: 500px; 
             box-sizing: border-box;
             background-color: var(--color-card);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             
-            /* **การแก้ไข:** ใช้ 100dvh เพื่อความสูงที่ถูกต้องบนมือถือ (ตรงกับ Homophone structure) */
+            /* FIX: ใช้ 100dvh เพื่อความสูงเต็มจอแนวตั้งที่ถูกต้อง */
             height: 100dvh;
             min-height: 100dvh;
             
