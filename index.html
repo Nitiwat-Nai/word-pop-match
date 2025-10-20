@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700;900&display=swap" rel="stylesheet">
 
     <style>
-        /* --- Mobile-First CSS with New Color Theme (Purple/Pink/Teal) --- */
+        /* --- Mobile-First CSS with Original Color Theme (Purple/Pink/Teal) --- */
         :root {
             --color-primary: #9C27B0; /* Deep Purple (ปุ่มลำโพง/Next) */
             --color-secondary: #E1BEE7; /* Light Lavender (ขอบปุ่มตัวเลือก) */
@@ -29,20 +29,20 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            /* ใช้ 100dvh เพื่อแก้ปัญหาแถบนำทางของเบราว์เซอร์มือถือ (โดยเฉพาะ iOS) */
+            /* **การแก้ไข:** ใช้ 100dvh เพื่อแก้ปัญหาแถบนำทางของเบราว์เซอร์มือถือ (iOS/Android) */
             min-height: 100dvh; 
             text-align: center;
         }
 
         .container {
             width: 100%;
-            /* ปรับ Max-width ให้กว้างขึ้นเล็กน้อยเพื่อจำลองหน้าจอ Max */
-            max-width: 430px; 
+            /* **การแก้ไข:** ปรับ Max-width ให้เท่ากับโค้ด Homophone */
+            max-width: 500px; 
             box-sizing: border-box;
             background-color: var(--color-card);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             
-            /* การปรับหลัก: ใช้ 100dvh เพื่อความสูงที่ถูกต้องบนมือถือ */
+            /* **การแก้ไข:** ใช้ 100dvh เพื่อความสูงที่ถูกต้องบนมือถือ (ตรงกับ Homophone structure) */
             height: 100dvh;
             min-height: 100dvh;
             
