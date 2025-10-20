@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700;900&display=swap" rel="stylesheet">
 
     <style>
-        /* --- Mobile-First CSS with Original Color Theme (Purple/Pink/Teal) --- */
+        /* --- Mobile-First CSS with New Color Theme (Purple/Pink/Teal) --- */
         :root {
             --color-primary: #9C27B0; /* Deep Purple (ปุ่มลำโพง/Next) */
             --color-secondary: #E1BEE7; /* Light Lavender (ขอบปุ่มตัวเลือก) */
@@ -29,35 +29,29 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            /* **✅ แก้ไข: ใช้ 100dvh เพื่อให้พอดีขอบล่างของจอแนวตั้ง** */
-            min-height: 100dvh; 
+            min-height: 100vh;
             text-align: center;
         }
 
         .container {
             width: 100%;
-            max-width: 500px; 
+            max-width: 500px;
             box-sizing: border-box;
             background-color: var(--color-card);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            
-            /* **✅ แก้ไข: ความสูงเต็มจอที่ถูกต้อง** */
-            height: 100dvh;
-            min-height: 100dvh;
-            
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
             padding: 0;
         }
-        
+
         /* Header */
         header {
             background-color: var(--color-primary);
             color: var(--color-text-light);
             padding: 1.5rem 1rem;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-            flex-shrink: 0; 
         }
         header h1 {
             font-size: 1.8rem;
@@ -68,7 +62,7 @@
         .screen {
             padding: 1rem;
             display: none; 
-            flex-grow: 1; 
+            flex-grow: 1;
             flex-direction: column;
             justify-content: space-between;
         }
@@ -108,8 +102,9 @@
 
         /* --- Game Screen --- */
         #game-screen {
+            /* 2. ปรับความสูงของพื้นที่บทเรียน: ให้ใช้พื้นที่ที่เหลืออย่างยืดหยุ่น */
+            min-height: calc(100vh - 8rem); /* 8rem คือพื้นที่โดยประมาณของ Header และ Footer */
             justify-content: flex-start;
-            flex-grow: 1; 
         }
         #game-screen .top-content {
             flex-grow: 1;
@@ -158,14 +153,14 @@
             display: grid;
             grid-template-columns: 1fr 1fr; 
             gap: 15px;
-            flex-grow: 1; 
+            flex-grow: 1; /* ทำให้ส่วนนี้ขยายเต็มพื้นที่ที่เหลือ */
             padding-bottom: 1rem;
         }
         .option-btn {
             background-color: var(--color-button-bg);
             border: 5px solid var(--color-secondary); 
             border-radius: 15px; 
-            padding: 8px; /* ✅ แก้ไข: ลด padding ลง */
+            padding: 10px;
             cursor: pointer;
             transition: all 0.2s;
             aspect-ratio: 1 / 1; 
@@ -180,12 +175,12 @@
 
         /* Icon (Emoji) Style */
         .option-btn .item-icon {
-            font-size: 3em; /* ✅ แก้ไข: ลดขนาดไอคอน */
+            font-size: 3.5em; 
             margin-bottom: 5px;
         }
         /* Word Style */
         .option-btn .item-word {
-            font-size: 1.1em; /* ✅ แก้ไข: ลดขนาดคำศัพท์ */
+            font-size: 1.2em;
             font-weight: bold;
             color: var(--color-text-dark);
         }
@@ -217,6 +212,7 @@
             margin-top: 1.5rem;
             padding-top: 1rem;
             border-top: 1px solid #ECEFF1;
+            /* ป้องกันไม่ให้ Footer ยืดเกินพื้นที่ */
             flex-shrink: 0; 
         }
         #next-btn {
@@ -386,7 +382,7 @@
                 { word: "egg", icon: "🥚", audio: "egg.mp3" },
                 { word: "cheese", icon: "🧀", audio: "cheese.mp3" },
                 { word: "carrot", icon: "🥕", audio: "carrot.mp3" },
-                { word: "soup", icon: "🥣", "audio": "soup.mp3" },
+                { word: "soup", icon: "🥣", audio: "soup.mp3" },
                 { word: "cake", icon: "🎂", audio: "cake.mp3" },
                 { word: "water", icon: "💧", audio: "water.mp3" },
                 { word: "cookie", icon: "🍪", audio: "cookie.mp3" },
@@ -451,6 +447,7 @@
         /** 1. แก้ไขปัญหาเสียงคำศัพท์: ใช้ Promise เพื่อลองเล่นเสียงและจัดการข้อผิดพลาด */
         function playWordAudio() {
             wordAudio.currentTime = 0;
+            // ใช้ Promise เพื่อจัดการการเล่นเสียงที่อาจถูกบล็อกโดยเบราว์เซอร์
             const playPromise = wordAudio.play();
             
             if (playPromise !== undefined) {
@@ -623,6 +620,7 @@
                 // Highlight the correct answer
                 const correctAnswerButton = document.querySelector(`.option-btn[data-is-correct="true"]`);
                 if (correctAnswerButton) {
+                    // ใส่ class correct เพื่อแสดงคำตอบที่ถูก
                     correctAnswerButton.classList.add('correct');
                 }
             }
