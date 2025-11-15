@@ -332,7 +332,7 @@
             ]},
             // LEVEL 7: Family
             { level: 7, title: "ครอบครัว", questions: [
-                { word: "mother", icon: "👩" },
+                { word: "mother", icon: "👩", },
                 { word: "father", icon: "👨" },
                 { word: "sister", icon: "👧" },
                 { word: "brother", icon: "👦" },
@@ -385,7 +385,7 @@
         ];
 
         const OPTIONS_COUNT = 4;
-        const MAX_REPLAY_COUNT = 3; // จำนวนครั้งที่ผู้เล่นคลิกฟังซ้ำได้ (นับรวมการเล่นอัตโนมัติ)
+        const MAX_REPLAY_COUNT = 3; 
 
         // --- ELEMENTS & TTS SETUP ---
         const levelSelectScreen = document.getElementById('level-select-screen');
@@ -402,7 +402,7 @@
 
         // TTS Variables
         const synth = window.speechSynthesis;
-        let voice = null; // จะถูกตั้งค่าใน initTTS
+        let voice = null; 
         let isSpeaking = false;
 
 
@@ -416,18 +416,12 @@
 
         // --- TTS FUNCTIONS ---
 
-        /** * @function initTTS
-         * ตั้งค่า Voice ให้อ่านภาษาอังกฤษ (en-US) 
-         * และให้แน่ใจว่ามันถูกเรียกหลังจากการโหลด Level
-         */
         function initTTS() {
             if (voice) return;
 
             const voices = synth.getVoices();
-            // พยายามหาเสียงภาษาอังกฤษแบบ US
             voice = voices.find(v => v.lang === 'en-US' || v.lang.startsWith('en-')); 
             
-            // หากไม่พบ en-US ให้ใช้เสียงแรกที่ใช้ได้
             if (!voice && voices.length > 0) {
                  voice = voices[0];
             }
@@ -436,13 +430,10 @@
             }
         }
         
-        /** * @function speakWord
-         * อ่านออกเสียงคำศัพท์โจทย์
-         */
         function speakWord(word) {
             if (!synth || !word || isSpeaking) return;
             
-            synth.cancel(); // ยกเลิกการอ่านก่อนหน้า
+            synth.cancel(); 
             
             const utterance = new SpeechSynthesisUtterance(word);
             utterance.lang = 'en-US'; 
@@ -452,7 +443,6 @@
             utterance.onstart = () => { isSpeaking = true; audioButton.disabled = true; };
             utterance.onend = () => { 
                 isSpeaking = false; 
-                // อนุญาตให้คลิกปุ่มลำโพงได้ หากยังไม่หมดจำนวนครั้ง
                 if (!isAnswered && audioPlayCount < MAX_REPLAY_COUNT) {
                     audioButton.disabled = false;
                 }
@@ -461,15 +451,12 @@
             synth.speak(utterance);
         }
 
-        /** * @function speakFeedback
-         * อ่านออกเสียงคำตอบ เช่น "Correct!" (TTS จะพยายามอ่านเป็นภาษาอังกฤษตาม lang ที่กำหนด)
-         */
         function speakFeedback(message) {
             if (!synth || !message) return;
             
             synth.cancel();
             const utterance = new SpeechSynthesisUtterance(message);
-            utterance.lang = 'en-US'; // ใช้เสียงอังกฤษในการพูด Feedback 
+            utterance.lang = 'en-US'; 
             utterance.rate = 1.0; 
             utterance.voice = voice;
             synth.speak(utterance);
@@ -477,9 +464,6 @@
         
         // --- AUDIO CONTROL LOGIC (TTS) ---
 
-        /** * @function tryAutoPlayTTS
-         * พยายามอ่านคำโจทย์อัตโนมัติ (นับเป็นครั้งที่ 1)
-         */
         function tryAutoPlayTTS() {
             if (isAnswered) return;
             
@@ -488,9 +472,6 @@
             updateAudioButtonState();
         }
         
-        /** * @function playWordAudioByUserClickTTS
-         * อ่านซ้ำเมื่อผู้ใช้คลิกปุ่มลำโพง
-         */
         function playWordAudioByUserClickTTS() {
             if (isAnswered || isSpeaking) return;
             
@@ -501,9 +482,6 @@
             }
         }
         
-        /** * @function updateAudioButtonState
-         * อัปเดตสถานะปุ่มลำโพง
-         */
         function updateAudioButtonState() {
             if (isAnswered || isSpeaking) {
                  audioButton.disabled = true;
@@ -533,8 +511,7 @@
 
         function createLevelButtons() {
             levelGridEl.innerHTML = '';
-            // ต้องเรียก initTTS ตรงนี้ เพื่อให้แน่ใจว่า Voice ถูกโหลดก่อนเริ่มเกม (User Interaction)
-            initTTS(); 
+            // **การแก้ไข: ลบ initTTS() ออกเพื่อให้การสร้างปุ่มเป็นไปอย่างรวดเร็ว**
             
             ALL_LEVEL_WORDS.forEach(data => {
                 const btn = document.createElement('button');
@@ -555,11 +532,29 @@
             });
         }
 
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(id).classList.add('active');
+        }
+
+
+        function updateStatusBar() {
+            if (currentLevelData) {
+                levelTitleEl.textContent = `${currentLevelData.title} (Level ${currentLevelData.level})`;
+                qCountEl.textContent = `ข้อ: ${currentQuizIndex + 1}/${currentLevelData.questions.length}`;
+            }
+            scoreEl.textContent = `คะแนน: ${score}`;
+        }
+
+
         function startLevel(levelId) {
             currentLevelData = ALL_LEVEL_WORDS.find(data => data.level === levelId);
             currentQuizIndex = 0;
             score = 0; 
-            showScreen('game-screen');
+            // **คำสั่งเปลี่ยนหน้าจอ**
+            showScreen('game-screen'); 
             nextQuestion();
         }
 
@@ -629,7 +624,7 @@
             // 2. แสดงคำโจทย์ (TEXT) 
             wordPromptTextEl.textContent = currentWord.word.toUpperCase();
 
-            // 3. ลองเล่นเสียงอัตโนมัติ (TTS จะทำงานได้ง่ายกว่า MP3 หากมีการโต้ตอบแล้ว)
+            // 3. ลองเล่นเสียงอัตโนมัติ 
             tryAutoPlayTTS();
             
             // 4. อัปเดตข้อความแจ้งเตือนเริ่มต้น 
@@ -643,7 +638,7 @@
             const selectedButton = event.currentTarget;
             const isCorrect = selectedButton.dataset.isCorrect === 'true';
 
-            synth.cancel(); // หยุดการอ่านทั้งหมด
+            synth.cancel(); 
             audioButton.disabled = true;
 
             // 1. Disable all choices
@@ -704,7 +699,7 @@
         });
 
         nextBtn.addEventListener('click', () => {
-            synth.cancel(); // ยกเลิกการพูด Feedback ก่อนไปข้อถัดไป
+            synth.cancel(); 
             if (currentQuizIndex >= currentLevelData.questions.length - 1 && nextBtn.textContent === 'กลับหน้าหลัก') { 
                 showScreen('level-select-screen');
                 currentQuizIndex = 0; 
@@ -722,9 +717,12 @@
             createLevelButtons();
             showScreen('level-select-screen');
             
-            // โหลด TTS Voice เมื่อเอกสารพร้อม
-            if (synth.onvoiceschanged !== undefined) {
+            // โหลด TTS Voice เมื่อเอกสารพร้อม (วิธีมาตรฐาน)
+            if (synth && synth.onvoiceschanged !== undefined) {
                 synth.onvoiceschanged = initTTS;
+            } else if (synth) {
+                // สำหรับเบราว์เซอร์ที่ไม่มี onvoiceschanged
+                initTTS();
             }
         });
     </script>
