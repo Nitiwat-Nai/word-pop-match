@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Word Pop Match - เกมจับคู่คำศัพท์</title>
+    <title>Word Pop Match - เกมจับคู่คำศัพท์ (TTS)</title>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700;900&display=swap" rel="stylesheet">
 
     <style>
-        /* --- Mobile-First CSS with New Color Theme (Purple/Pink/Teal) --- */
+        /* --- CSS (คงเดิมและจัดกึ่งกลางตัวเลือก) --- */
         :root {
-            --color-primary: #9C27B0; /* Deep Purple (ปุ่มลำโพง/Next) */
-            --color-secondary: #E1BEE7; /* Light Lavender (ขอบปุ่มตัวเลือก) */
-            --color-correct: #00BCD4; /* Cyan/Teal (สีถูก) */
-            --color-wrong: #FF5252; /* Bright Red (สีผิด) */
-            --color-bg: #F3E5F5; /* Very Light Purple/Pink (พื้นหลัง) */
-            --color-card: #FFFFFF; /* White (สำหรับ Header/ส่วนข้อมูล) */
-            --color-button-bg: #FCE4EC; /* Light Pink (พื้นหลังปุ่มตัวเลือก) */
+            --color-primary: #9C27B0; 
+            --color-secondary: #E1BEE7; 
+            --color-correct: #00BCD4; 
+            --color-wrong: #FF5252; 
+            --color-bg: #F3E5F5; 
+            --color-card: #FFFFFF; 
+            --color-button-bg: #FCE4EC; 
             --color-text-dark: #333333;
             --color-text-light: #FFFFFF;
         }
@@ -26,7 +26,6 @@
             color: var(--color-text-dark);
             margin: 0;
             padding: 0;
-            /* จัดกึ่งกลางแนวนอน */
             display: flex;
             justify-content: center;
             align-items: center; 
@@ -36,7 +35,7 @@
 
         .container {
             width: 100%;
-            max-width: 500px; /* จำกัดความกว้างสูงสุดของพื้นที่เกม */
+            max-width: 500px; 
             box-sizing: border-box;
             background-color: var(--color-card);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
@@ -47,7 +46,6 @@
             padding: 0;
         }
 
-        /* Header */
         header {
             background-color: var(--color-primary);
             color: var(--color-text-light);
@@ -59,7 +57,6 @@
             margin: 0;
         }
 
-        /* Screen Management */
         .screen {
             padding: 1rem;
             display: none; 
@@ -90,10 +87,6 @@
             box-shadow: 0 4px 0 #5E35B1;
             transition: transform 0.1s, box-shadow 0.1s;
         }
-        .level-btn:active {
-            transform: translateY(2px);
-            box-shadow: 0 2px 0 #5E35B1;
-        }
         .level-btn-title {
             font-size: 0.8rem;
             font-weight: 400;
@@ -102,16 +95,6 @@
         }
 
         /* --- Game Screen --- */
-        #game-screen {
-            min-height: calc(100vh - 8rem); 
-            justify-content: flex-start;
-        }
-        #game-screen .top-content {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
         #game-screen .status-bar {
             display: flex;
             justify-content: space-between;
@@ -122,17 +105,22 @@
             color: #4A148C; 
         }
 
-        /* Prompt Area (Speaker Button) */
+        /* Prompt Area (Speaker Button & Word Text) */
         #prompt-area {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             margin-bottom: 1.5rem;
-            min-height: 100px;
+            min-height: 150px; 
+        }
+        #word-prompt-text {
+            font-size: 2.5rem; 
+            font-weight: 900;
+            margin-bottom: 10px;
+            color: var(--color-primary);
         }
         #audio-button {
-            /* ปรับขนาดปุ่มลำโพง */
             background-color: var(--color-primary); 
             border: none;
             border-radius: 50%;
@@ -151,7 +139,7 @@
         
         /* Choices Area (4-button Grid) */
         #options-area {
-            /* แก้ไข: จัดกึ่งกลางแนวนอน */
+            /* จัดกึ่งกลางแนวนอน */
             display: grid;
             grid-template-columns: 1fr 1fr; 
             gap: 15px;
@@ -167,7 +155,6 @@
             border-radius: 15px; 
             padding: 10px;
             cursor: pointer;
-            transition: all 0.2s;
             aspect-ratio: 1 / 1; 
             box-sizing: border-box;
             
@@ -175,26 +162,17 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            line-height: 1.2;
         }
-
-        /* Icon (Emoji) Style */
         .option-btn .item-icon {
             font-size: 3em; 
             margin-bottom: 5px;
         }
-        /* Word Style */
         .option-btn .item-word {
             font-size: 1.1em; 
             font-weight: bold;
             color: var(--color-text-dark);
         }
 
-        .option-btn:hover, .option-btn:focus {
-            border-color: var(--color-primary); 
-        }
-        
-        /* Feedback Colors */
         .option-btn.correct {
             border-color: var(--color-correct) !important; 
             box-shadow: 0 0 20px #4DD0E1; 
@@ -206,13 +184,8 @@
             animation: shake 0.5s;
             background-color: #FFEBEE; 
         }
-        @keyframes shake {
-            0%, 100% {transform: translateX(0);}
-            20%, 60% {transform: translateX(-5px);}
-            40%, 80% {transform: translateX(5px);}
-        }
 
-        /* Footer/Control */
+        /* Footer */
         #game-footer {
             margin-top: 1.5rem;
             padding-top: 1rem;
@@ -230,11 +203,6 @@
             font-weight: bold;
             cursor: pointer;
             box-shadow: 0 4px 0 #7B1FA2;
-            transition: all 0.1s;
-        }
-        #next-btn:active {
-            transform: translateY(2px);
-            box-shadow: 0 2px 0 #7B1FA2;
         }
     </style>
 </head>
@@ -242,7 +210,7 @@
 
     <div class="container">
         <header>
-            <h1>Word Pop Match</h1>
+            <h1>Word Pop Match (TTS)</h1>
         </header>
 
         <div id="level-select-screen" class="screen active">
@@ -262,6 +230,7 @@
                 </div>
 
                 <div id="prompt-area">
+                    <div id="word-prompt-text"></div> 
                     <button id="audio-button" aria-label="Listen to the word">
                         <span class="speaker-icon">🔊</span>
                     </button>
@@ -278,295 +247,295 @@
         </div>
     </div>
 
-    <audio id="word-audio"></audio>
-    <audio id="correct-audio" src="sounds/correct.mp3"></audio>
-    <audio id="incorrect-audio" src="sounds/incorrect.mp3"></audio>
-
     <script>
-        /* ------------------- JavaScript Core Logic ------------------- */
+        /* ------------------- JavaScript Core Logic (ใช้ TTS) ------------------- */
 
-        // --- DATA (10 Levels x 10 Words) ---
+        // --- DATA (ไม่ต้องมี path ไฟล์เสียงแล้ว) ---
         const ALL_LEVEL_WORDS = [
             // LEVEL 1: Colors & Basic Objects
             { level: 1, title: "สีและสิ่งของพื้นฐาน", questions: [
-                { word: "red", icon: "🔴", audio: "red.mp3" },
-                { word: "blue", icon: "🔵", audio: "blue.mp3" },
-                { word: "yellow", icon: "🟡", audio: "yellow.mp3" },
-                { word: "green", icon: "🟢", audio: "green.mp3" },
-                { word: "sun", icon: "☀️", audio: "sun.mp3" },
-                { word: "star", icon: "⭐", audio: "star.mp3" },
-                { word: "moon", icon: "🌙", audio: "moon.mp3" },
-                { word: "cloud", icon: "☁️", audio: "cloud.mp3" },
-                { word: "tree", icon: "🌳", audio: "tree.mp3" },
-                { word: "flower", icon: "🌸", audio: "flower.mp3" },
+                { word: "red", icon: "🔴" },
+                { word: "blue", icon: "🔵" },
+                { word: "yellow", icon: "🟡" },
+                { word: "green", icon: "🟢" },
+                { word: "sun", icon: "☀️" },
+                { word: "star", icon: "⭐" },
+                { word: "moon", icon: "🌙" },
+                { word: "cloud", icon: "☁️" },
+                { word: "tree", icon: "🌳" },
+                { word: "flower", icon: "🌸" },
             ]},
             // LEVEL 2: Animals 
             { level: 2, title: "สัตว์", questions: [
-                { word: "dog", icon: "🐕", audio: "dog.mp3" },
-                { word: "cat", icon: "🐈", audio: "cat.mp3" },
-                { word: "fish", icon: "🐟", audio: "fish.mp3" },
-                { word: "bird", icon: "🐦", audio: "bird.mp3" },
-                { word: "lion", icon: "🦁", audio: "lion.mp3" },
-                { word: "bear", icon: "🐻", audio: "bear.mp3" },
-                { word: "cow", icon: "🐄", audio: "cow.mp3" },
-                { word: "pig", icon: "🐖", audio: "pig.mp3" },
-                { word: "frog", icon: "🐸", audio: "frog.mp3" },
-                { word: "rabbit", icon: "🐇", audio: "rabbit.mp3" },
+                { word: "dog", icon: "🐕" },
+                { word: "cat", icon: "🐈" },
+                { word: "fish", icon: "🐟" },
+                { word: "bird", icon: "🐦" },
+                { word: "lion", icon: "🦁" },
+                { word: "bear", icon: "🐻" },
+                { word: "cow", icon: "🐄" },
+                { word: "pig", icon: "🐖" },
+                { word: "frog", icon: "🐸" },
+                { word: "rabbit", icon: "🐇" },
             ]},
             // LEVEL 3: Fruits 
             { level: 3, title: "ผลไม้", questions: [
-                { word: "apple", icon: "🍎", audio: "apple.mp3" },
-                { word: "banana", icon: "🍌", audio: "banana.mp3" },
-                { word: "grape", icon: "🍇", audio: "grape.mp3" },
-                { word: "orange", icon: "🍊", audio: "orange.mp3" },
-                { word: "strawberry", icon: "🍓", audio: "strawberry.mp3" },
-                { word: "watermelon", icon: "🍉", audio: "watermelon.mp3" },
-                { word: "kiwi", icon: "🥝", audio: "kiwi.mp3" },
-                { word: "cherry", icon: "🍒", audio: "cherry.mp3" },
-                { word: "peach", icon: "🍑", audio: "peach.mp3" },
-                { word: "pear", icon: "🍐", audio: "pear.mp3" },
+                { word: "apple", icon: "🍎" },
+                { word: "banana", icon: "🍌" },
+                { word: "grape", icon: "🍇" },
+                { word: "orange", icon: "🍊" },
+                { word: "strawberry", icon: "🍓" },
+                { word: "watermelon", icon: "🍉" },
+                { word: "kiwi", icon: "🥝" },
+                { word: "cherry", icon: "🍒" },
+                { word: "peach", icon: "🍑" },
+                { word: "pear", icon: "🍐" },
             ]},
              // LEVEL 4: Body Parts
             { level: 4, title: "อวัยวะ", questions: [
-                { word: "head", icon: "🧑", audio: "head.mp3" }, 
-                { word: "eye", icon: "👁️", audio: "eye.mp3" },
-                { word: "nose", icon: "👃", audio: "nose.mp3" },
-                { word: "mouth", icon: "👄", audio: "mouth.mp3" },
-                { word: "ear", icon: "👂", audio: "ear.mp3" },
-                { word: "hand", icon: "✋", audio: "hand.mp3" },
-                { word: "foot", icon: "🦶", audio: "foot.mp3" },
-                { word: "arm", icon: "💪", audio: "arm.mp3" },
-                { word: "leg", icon: "🦵", audio: "leg.mp3" },
-                { word: "finger", icon: "👆", audio: "finger.mp3" },
+                { word: "head", icon: "🧑" }, 
+                { word: "eye", icon: "👁️" },
+                { word: "nose", icon: "👃" },
+                { word: "mouth", icon: "👄" },
+                { word: "ear", icon: "👂" },
+                { word: "hand", icon: "✋" },
+                { word: "foot", icon: "🦶" },
+                { word: "arm", icon: "💪" },
+                { word: "leg", icon: "🦵" },
+                { word: "finger", icon: "👆" },
             ]},
             // LEVEL 5: Vehicles
             { level: 5, title: "ยานพาหนะ", questions: [
-                { word: "car", icon: "🚗", audio: "car.mp3" },
-                { word: "bus", icon: "🚌", audio: "bus.mp3" },
-                { word: "train", icon: "🚂", audio: "train.mp3" },
-                { word: "bike", icon: "🚲", audio: "bike.mp3" },
-                { word: "boat", icon: "⛵", audio: "boat.mp3" },
-                { word: "plane", icon: "✈️", audio: "plane.mp3" },
-                { word: "truck", icon: "🚚", audio: "truck.mp3" },
-                { word: "scooter", icon: "🛴", audio: "scooter.mp3" },
-                { word: "taxi", icon: "🚕", audio: "taxi.mp3" },
-                { word: "ship", icon: "🚢", audio: "ship.mp3" },
+                { word: "car", icon: "🚗" },
+                { word: "bus", icon: "🚌" },
+                { word: "train", icon: "🚂" },
+                { word: "bike", icon: "🚲" },
+                { word: "boat", icon: "⛵" },
+                { word: "plane", icon: "✈️" },
+                { word: "truck", icon: "🚚" },
+                { word: "scooter", icon: "🛴" },
+                { word: "taxi", icon: "🚕" },
+                { word: "ship", icon: "🚢" },
             ]},
             // LEVEL 6: Clothes
             { level: 6, title: "เสื้อผ้า", questions: [
-                { word: "shirt", icon: "👕", audio: "shirt.mp3" },
-                { word: "dress", icon: "👗", audio: "dress.mp3" },
-                { word: "shoes", icon: "👟", audio: "shoes.mp3" },
-                { word: "hat", icon: "🧢", audio: "hat.mp3" },
-                { word: "socks", icon: "🧦", audio: "socks.mp3" },
-                { word: "pants", icon: "👖", audio: "pants.mp3" },
-                { word: "skirt", icon: "👚", audio: "skirt.mp3" },
-                { word: "coat", icon: "🧥", audio: "coat.mp3" },
-                { word: "scarf", icon: "🧣", audio: "scarf.mp3" },
-                { word: "gloves", icon: "🧤", audio: "gloves.mp3" },
+                { word: "shirt", icon: "👕" },
+                { word: "dress", icon: "👗" },
+                { word: "shoes", icon: "👟" },
+                { word: "hat", icon: "🧢" },
+                { word: "socks", icon: "🧦" },
+                { word: "pants", icon: "👖" },
+                { word: "skirt", icon: "👚" },
+                { word: "coat", icon: "🧥" },
+                { word: "scarf", icon: "🧣" },
+                { word: "gloves", icon: "🧤" },
             ]},
             // LEVEL 7: Family
             { level: 7, title: "ครอบครัว", questions: [
-                { word: "mother", icon: "👩", audio: "mother.mp3" },
-                { word: "father", icon: "👨", audio: "father.mp3" },
-                { word: "sister", icon: "👧", audio: "sister.mp3" },
-                { word: "brother", icon: "👦", audio: "brother.mp3" },
-                { word: "baby", icon: "👶", audio: "baby.mp3" },
-                { word: "grandma", icon: "👵", audio: "grandma.mp3" },
-                { word: "grandpa", icon: "👴", audio: "grandpa.mp3" },
-                { word: "aunt", icon: "🧑‍🦱", audio: "aunt.mp3" },
-                { word: "uncle", icon: "🧔", audio: "uncle.mp3" },
-                { word: "friend", icon: "🧑‍🤝‍🧑", audio: "friend.mp3" },
+                { word: "mother", icon: "👩" },
+                { word: "father", icon: "👨" },
+                { word: "sister", icon: "👧" },
+                { word: "brother", icon: "👦" },
+                { word: "baby", icon: "👶" },
+                { word: "grandma", icon: "👵" },
+                { word: "grandpa", icon: "👴" },
+                { word: "aunt", icon: "🧑‍🦱" },
+                { word: "uncle", icon: "🧔" },
+                { word: "friend", icon: "🧑‍🤝‍🧑" },
             ]},
             // LEVEL 8: Food
             { level: 8, title: "อาหาร", questions: [
-                { word: "pizza", icon: "🍕", audio: "pizza.mp3" },
-                { word: "bread", icon: "🍞", audio: "bread.mp3" },
-                { word: "milk", icon: "🥛", audio: "milk.mp3" },
-                { word: "egg", icon: "🥚", audio: "egg.mp3" },
-                { word: "cheese", icon: "🧀", audio: "cheese.mp3" },
-                { word: "carrot", icon: "🥕", audio: "carrot.mp3" },
-                { word: "soup", icon: "🥣", audio: "soup.mp3" },
-                { word: "cake", icon: "🎂", audio: "cake.mp3" },
-                { word: "water", icon: "💧", audio: "water.mp3" },
-                { word: "cookie", icon: "🍪", audio: "cookie.mp3" },
+                { word: "pizza", icon: "🍕" },
+                { word: "bread", icon: "🍞" },
+                { word: "milk", icon: "🥛" },
+                { word: "egg", icon: "🥚" },
+                { word: "cheese", icon: "🧀" },
+                { word: "carrot", icon: "🥕" },
+                { word: "soup", icon: "🥣" },
+                { word: "cake", icon: "🎂" },
+                { word: "water", icon: "💧" },
+                { word: "cookie", icon: "🍪" },
             ]},
             // LEVEL 9: Actions
             { level: 9, title: "กริยา", questions: [
-                { word: "run", icon: "🏃", audio: "run.mp3" },
-                { word: "jump", icon: "🤸", audio: "jump.mp3" },
-                { word: "sleep", icon: "😴", audio: "sleep.mp3" },
-                { word: "eat", icon: "🍽️", audio: "eat.mp3" },
-                { word: "drink", icon: "🥤", audio: "drink.mp3" },
-                { word: "read", icon: "📖", audio: "read.mp3" },
-                { word: "sing", icon: "🎤", audio: "sing.mp3" },
-                { word: "walk", icon: "🚶", audio: "walk.mp3" },
-                { word: "play", icon: "🤹", audio: "play.mp3" },
-                { word: "talk", icon: "🗣️", audio: "talk.mp3" },
+                { word: "run", icon: "🏃" },
+                { word: "jump", icon: "🤸" },
+                { word: "sleep", icon: "😴" },
+                { word: "eat", icon: "🍽️" },
+                { word: "drink", icon: "🥤" },
+                { word: "read", icon: "📖" },
+                { word: "sing", icon: "🎤" },
+                { word: "walk", icon: "🚶" },
+                { word: "play", icon: "🤹" },
+                { word: "talk", icon: "🗣️" },
             ]},
             // LEVEL 10: Adjectives
             { level: 10, title: "คำคุณศัพท์", questions: [
-                { word: "happy", icon: "😄", audio: "happy.mp3" },
-                { word: "sad", icon: "😥", audio: "sad.mp3" },
-                { word: "big", icon: "⬆️", audio: "big.mp3" },
-                { word: "small", icon: "⬇️", audio: "small.mp3" },
-                { word: "hot", icon: "🔥", audio: "hot.mp3" },
-                { word: "cold", icon: "🥶", audio: "cold.mp3" },
-                { word: "fast", icon: "💨", audio: "fast.mp3" },
-                { word: "slow", icon: "🐌", audio: "slow.mp3" },
-                { word: "clean", icon: "🧼", audio: "clean.mp3" },
-                { word: "dirty", icon: "💩", audio: "dirty.mp3" },
+                { word: "happy", icon: "😄" },
+                { word: "sad", icon: "😥" },
+                { word: "big", icon: "⬆️" },
+                { word: "small", icon: "⬇️" },
+                { word: "hot", icon: "🔥" },
+                { word: "cold", icon: "🥶" },
+                { word: "fast", icon: "💨" },
+                { word: "slow", icon: "🐌" },
+                { word: "clean", icon: "🧼" },
+                { word: "dirty", icon: "💩" },
             ]},
         ];
 
-        const QUESTIONS_PER_LEVEL = 10;
         const OPTIONS_COUNT = 4;
-        const MAX_REPLAY_COUNT = 2; // จำนวนครั้งที่ผู้เล่นคลิกฟังซ้ำได้ (ไม่รวมการเล่นอัตโนมัติ)
+        const MAX_REPLAY_COUNT = 3; // จำนวนครั้งที่ผู้เล่นคลิกฟังซ้ำได้ (นับรวมการเล่นอัตโนมัติ)
 
-        // --- ELEMENTS ---
+        // --- ELEMENTS & TTS SETUP ---
         const levelSelectScreen = document.getElementById('level-select-screen');
         const gameScreen = document.getElementById('game-screen');
         const levelGridEl = document.getElementById('level-grid');
-
         const levelTitleEl = document.getElementById('level-title');
         const qCountEl = document.getElementById('q-count');
         const scoreEl = document.getElementById('score');
+        const wordPromptTextEl = document.getElementById('word-prompt-text'); 
         const audioButton = document.getElementById('audio-button');
         const feedbackMessageEl = document.getElementById('feedback-message');
         const optionsArea = document.getElementById('options-area');
         const nextBtn = document.getElementById('next-btn');
-        
-        const wordAudio = document.getElementById('word-audio');
-        const correctAudio = document.getElementById('correct-audio');
-        const incorrectAudio = document.getElementById('incorrect-audio');
+
+        // TTS Variables
+        const synth = window.speechSynthesis;
+        let voice = null; // จะถูกตั้งค่าใน initTTS
+        let isSpeaking = false;
 
 
         // --- GAME STATE ---
         let currentLevelData = null;
-        let currentQuizIndex = 0; // 0-9
+        let currentQuizIndex = 0; 
         let score = 0;
         let isAnswered = false;
         let currentWord = {};
-        let audioPlayCount = 0; // นับรวมการเล่นอัตโนมัติ
-        let audioContextUnlocked = false; // **เพิ่ม: สถานะการปลดล็อก Audio Context**
+        let audioPlayCount = 0; 
 
+        // --- TTS FUNCTIONS ---
 
-        // --- CORE FUNCTIONS (Audio Fix) ---
-        
-        /** * ฟังก์ชันปลดล็อก Audio Context โดยใช้การคลิกเลือก Level เป็น User Gesture 
+        /** * @function initTTS
+         * ตั้งค่า Voice ให้อ่านภาษาอังกฤษ (en-US) 
+         * และให้แน่ใจว่ามันถูกเรียกหลังจากการโหลด Level
          */
-        function unlockAudioContext(audioFile) {
-            if (audioContextUnlocked) return;
+        function initTTS() {
+            if (voice) return;
+
+            const voices = synth.getVoices();
+            // พยายามหาเสียงภาษาอังกฤษแบบ US
+            voice = voices.find(v => v.lang === 'en-US' || v.lang.startsWith('en-')); 
             
-            // ใช้ไฟล์เสียงคำถามแรกของ Level ที่เลือกเพื่อโหลด
-            wordAudio.muted = true;
-            wordAudio.src = audioFile; 
-            wordAudio.load();
-            
-            const playPromise = wordAudio.play();
-            if (playPromise !== undefined) {
-                playPromise.then(() => {
-                    // เล่นได้สำเร็จ (Context ถูกปลดล็อก)
-                    wordAudio.pause();
-                    wordAudio.currentTime = 0;
-                    wordAudio.muted = false; 
-                    audioContextUnlocked = true;
-                    console.log("Audio Context unlocked by user gesture.");
-                }).catch(error => {
-                    // หากยังถูกบล็อก (ไม่น่าจะเกิดขึ้นถ้าคลิกโดยตรง)
-                    wordAudio.muted = false;
-                    console.warn("Could not unlock audio context immediately:", error);
-                });
+            // หากไม่พบ en-US ให้ใช้เสียงแรกที่ใช้ได้
+            if (!voice && voices.length > 0) {
+                 voice = voices[0];
+            }
+            if (!voice) {
+                 console.error("No compatible voice found for TTS.");
             }
         }
-
-        /** * ฟังก์ชันพยายามเล่นเสียงอัตโนมัติ 
+        
+        /** * @function speakWord
+         * อ่านออกเสียงคำศัพท์โจทย์
          */
-        function tryAutoPlay() {
+        function speakWord(word) {
+            if (!synth || !word || isSpeaking) return;
+            
+            synth.cancel(); // ยกเลิกการอ่านก่อนหน้า
+            
+            const utterance = new SpeechSynthesisUtterance(word);
+            utterance.lang = 'en-US'; 
+            utterance.rate = 0.9; 
+            utterance.voice = voice;
+            
+            utterance.onstart = () => { isSpeaking = true; audioButton.disabled = true; };
+            utterance.onend = () => { 
+                isSpeaking = false; 
+                // อนุญาตให้คลิกปุ่มลำโพงได้ หากยังไม่หมดจำนวนครั้ง
+                if (!isAnswered && audioPlayCount < MAX_REPLAY_COUNT) {
+                    audioButton.disabled = false;
+                }
+            };
+            
+            synth.speak(utterance);
+        }
+
+        /** * @function speakFeedback
+         * อ่านออกเสียงคำตอบ เช่น "Correct!" (TTS จะพยายามอ่านเป็นภาษาอังกฤษตาม lang ที่กำหนด)
+         */
+        function speakFeedback(message) {
+            if (!synth || !message) return;
+            
+            synth.cancel();
+            const utterance = new SpeechSynthesisUtterance(message);
+            utterance.lang = 'en-US'; // ใช้เสียงอังกฤษในการพูด Feedback 
+            utterance.rate = 1.0; 
+            utterance.voice = voice;
+            synth.speak(utterance);
+        }
+        
+        // --- AUDIO CONTROL LOGIC (TTS) ---
+
+        /** * @function tryAutoPlayTTS
+         * พยายามอ่านคำโจทย์อัตโนมัติ (นับเป็นครั้งที่ 1)
+         */
+        function tryAutoPlayTTS() {
             if (isAnswered) return;
-
-            wordAudio.currentTime = 0;
-            const playPromise = wordAudio.play();
             
-            if (playPromise !== undefined) {
-                playPromise.then(() => {
-                    // เล่นได้สำเร็จ: นับเป็นครั้งที่ 1 (เล่นอัตโนมัติ)
-                    audioPlayCount = 1; 
-                    updateAudioButtonState(true); 
-                }).catch(error => {
-                    // เล่นอัตโนมัติล้มเหลว (หาก Context ยังไม่ถูกปลดล็อก)
-                    audioPlayCount = 0; 
-                    updateAudioButtonState(false); 
-                });
+            speakWord(currentWord.word);
+            audioPlayCount = 1; 
+            updateAudioButtonState();
+        }
+        
+        /** * @function playWordAudioByUserClickTTS
+         * อ่านซ้ำเมื่อผู้ใช้คลิกปุ่มลำโพง
+         */
+        function playWordAudioByUserClickTTS() {
+            if (isAnswered || isSpeaking) return;
+            
+            if (audioPlayCount < MAX_REPLAY_COUNT) {
+                speakWord(currentWord.word);
+                audioPlayCount++;
+                updateAudioButtonState();
             }
         }
         
-        /** * ฟังก์ชันเล่นเสียงเมื่อผู้ใช้คลิกปุ่มลำโพง
+        /** * @function updateAudioButtonState
+         * อัปเดตสถานะปุ่มลำโพง
          */
-        function playWordAudioByUserClick() {
-            if (isAnswered) return;
-            
-            const maxTotalPlays = MAX_REPLAY_COUNT + 1; // 1 (ออโต้) + 2 (คลิกซ้ำ) = 3
-            
-            // หากยังไม่ได้เล่นอัตโนมัติ (audioPlayCount = 0) ถือว่าคลิกนี้คือครั้งแรก
-            // หากเล่นไปแล้ว 1 ครั้ง (audioPlayCount = 1) ถือว่าคลิกนี้คือครั้งที่ 2
-            if (audioPlayCount < maxTotalPlays) { 
-                wordAudio.currentTime = 0;
-                wordAudio.play().then(() => {
-                    audioPlayCount++;
-                    updateAudioButtonState(true); 
-                }).catch(error => {
-                    console.error("Manual play failed:", error);
-                });
-            }
-        }
-        
-        /** * อัปเดตสถานะปุ่มลำโพงและข้อความแจ้งเตือน
-         */
-        function updateAudioButtonState(hasPlayedSuccessfully) {
-            if (isAnswered) {
+        function updateAudioButtonState() {
+            if (isAnswered || isSpeaking) {
                  audioButton.disabled = true;
                  return;
             }
             
-            const maxTotalPlays = MAX_REPLAY_COUNT + 1; 
-            
-            if (audioPlayCount >= maxTotalPlays) {
-                // หมดจำนวนครั้ง
+            if (audioPlayCount >= MAX_REPLAY_COUNT) {
                 audioButton.disabled = true;
                 feedbackMessageEl.textContent = 'หมดจำนวนครั้งในการฟังซ้ำแล้ว';
                 feedbackMessageEl.style.color = 'var(--color-wrong)';
             } else {
                 audioButton.disabled = false;
-                const remainingReplays = maxTotalPlays - audioPlayCount;
+                const remaining = MAX_REPLAY_COUNT - audioPlayCount;
 
                 if (audioPlayCount === 0) {
-                    // กรณี Autoplay ล้มเหลว หรือยังไม่ได้เริ่มเล่น
                     feedbackMessageEl.textContent = `🔊 แตะที่ลำโพงเพื่อฟังคำศัพท์ (เหลืออีก ${MAX_REPLAY_COUNT} ครั้ง)`;
+                } else if (remaining > 0) {
+                    feedbackMessageEl.textContent = `🔊 ฟังซ้ำได้อีก ${remaining} ครั้ง`;
                 } else {
-                    // กรณีเล่นอัตโนมัติสำเร็จ หรือผู้ใช้คลิกไปแล้ว 1 ครั้ง
-                    const remaining = remainingReplays - 1;
-                    if (remaining > 0) {
-                        feedbackMessageEl.textContent = `🔊 ฟังซ้ำได้อีก ${remaining} ครั้ง`;
-                    } else {
-                        feedbackMessageEl.textContent = `🔊 นี่คือครั้งสุดท้ายที่ฟังซ้ำได้!`;
-                    }
+                    feedbackMessageEl.textContent = `🔊 นี่คือครั้งสุดท้ายที่ฟังซ้ำได้!`;
                 }
             }
         }
 
 
-        // --- UI & SCREEN MANAGEMENT ---
-
-        function showScreen(id) {
-            document.querySelectorAll('.screen').forEach(screen => {
-                screen.classList.remove('active');
-            });
-            document.getElementById(id).classList.add('active');
-        }
+        // --- GAME LOGIC ---
 
         function createLevelButtons() {
             levelGridEl.innerHTML = '';
+            // ต้องเรียก initTTS ตรงนี้ เพื่อให้แน่ใจว่า Voice ถูกโหลดก่อนเริ่มเกม (User Interaction)
+            initTTS(); 
+            
             ALL_LEVEL_WORDS.forEach(data => {
                 const btn = document.createElement('button');
                 btn.className = 'level-btn';
@@ -586,26 +555,11 @@
             });
         }
 
-        function updateStatusBar() {
-            if (currentLevelData) {
-                levelTitleEl.textContent = `${currentLevelData.title} (Level ${currentLevelData.level})`;
-                qCountEl.textContent = `ข้อ: ${currentQuizIndex + 1}/${currentLevelData.questions.length}`;
-            }
-            scoreEl.textContent = `คะแนน: ${score}`;
-        }
-
-        // --- GAME LOGIC ---
-
         function startLevel(levelId) {
             currentLevelData = ALL_LEVEL_WORDS.find(data => data.level === levelId);
             currentQuizIndex = 0;
             score = 0; 
             showScreen('game-screen');
-            
-            // **การแก้ไขใหม่: ปลดล็อก Audio Context ทันทีหลังจากการคลิกเลือก Level**
-            const firstAudioFile = `sounds/${currentLevelData.questions[0].audio}`;
-            unlockAudioContext(firstAudioFile); 
-            
             nextQuestion();
         }
 
@@ -616,40 +570,33 @@
             }
             
             isAnswered = false;
-            audioPlayCount = 0; // **รีเซ็ตจำนวนการเล่นเสียงสำหรับข้อใหม่**
-            audioButton.disabled = false; // เปิดปุ่มลำโพงสำหรับข้อใหม่
+            audioPlayCount = 0; 
             
             nextBtn.textContent = 'ข้อถัดไป';
             nextBtn.disabled = true;
             feedbackMessageEl.textContent = 'กำลังโหลดคำศัพท์...';
             feedbackMessageEl.style.color = 'var(--color-text-dark)';
 
-            // Reset UI
             optionsArea.innerHTML = ''; 
+            wordPromptTextEl.textContent = ''; 
             
             updateStatusBar();
             setupQuestion();
         }
 
-        /** ฟังก์ชันสุ่มเลือกคำศัพท์สำหรับรอบเกม */
         function getGameOptions() {
             const currentLevelWords = currentLevelData.questions;
-            
-            // ใช้คำศัพท์ตามลำดับ currentQuizIndex 
             const correctWord = currentLevelWords[currentQuizIndex]; 
             
-            // 2. สร้างชุดตัวเลือก 
             let options = [correctWord];
             const allWords = ALL_LEVEL_WORDS.flatMap(l => l.questions);
             const allWordsExcludingCorrect = allWords.filter(w => w.word !== correctWord.word);
             
-            // 3. เพิ่มตัวลวงจากคำศัพท์ทั้งหมด 
             const shuffledDistractors = allWordsExcludingCorrect.sort(() => 0.5 - Math.random());
             const distractors = shuffledDistractors.slice(0, OPTIONS_COUNT - 1);
             
             options = [...options, ...distractors];
 
-            // ตรวจสอบให้แน่ใจว่ามีตัวเลือกครบตามจำนวนที่กำหนด
             while (options.length > OPTIONS_COUNT) {
                  options.pop();
             }
@@ -678,16 +625,15 @@
                 button.addEventListener('click', handleAnswer);
                 optionsArea.appendChild(button);
             });
-
-            // 2. ตั้งค่าเสียงคำถาม
-            wordAudio.src = `sounds/${currentWord.audio}`;
-            wordAudio.load(); 
             
-            // 3. ลองเล่นเสียงอัตโนมัติ (ตอนนี้ Audio Context ควรจะถูกปลดล็อกแล้ว)
-            tryAutoPlay();
+            // 2. แสดงคำโจทย์ (TEXT) 
+            wordPromptTextEl.textContent = currentWord.word.toUpperCase();
+
+            // 3. ลองเล่นเสียงอัตโนมัติ (TTS จะทำงานได้ง่ายกว่า MP3 หากมีการโต้ตอบแล้ว)
+            tryAutoPlayTTS();
             
             // 4. อัปเดตข้อความแจ้งเตือนเริ่มต้น 
-            updateAudioButtonState(false); 
+            updateAudioButtonState(); 
         }
 
         function handleAnswer(event) {
@@ -697,11 +643,7 @@
             const selectedButton = event.currentTarget;
             const isCorrect = selectedButton.dataset.isCorrect === 'true';
 
-            // หยุดเสียงคำศัพท์
-            wordAudio.pause();
-            wordAudio.currentTime = 0;
-            
-            // ปิดการใช้งานปุ่มลำโพงเมื่อตอบแล้ว
+            synth.cancel(); // หยุดการอ่านทั้งหมด
             audioButton.disabled = true;
 
             // 1. Disable all choices
@@ -712,23 +654,20 @@
 
             // 2. Feedback
             if (isCorrect) {
-                correctAudio.currentTime = 0;
-                correctAudio.play().catch(e => console.error("Error playing correct sound:", e)); 
                 score++;
                 selectedButton.classList.add('correct');
-                feedbackMessageEl.textContent = `✅ ถูกต้อง! (${currentWord.word.toUpperCase()})`;
+                feedbackMessageEl.textContent = `✅ ถูกต้อง!`;
                 feedbackMessageEl.style.color = 'var(--color-correct)';
+                speakFeedback("Correct!");
             } else {
-                incorrectAudio.currentTime = 0;
-                incorrectAudio.play().catch(e => console.error("Error playing incorrect sound:", e));
                 selectedButton.classList.add('incorrect');
                 feedbackMessageEl.textContent = `❌ ผิด! คำตอบคือ ${currentWord.word.toUpperCase()}`;
                 feedbackMessageEl.style.color = 'var(--color-wrong)';
+                speakFeedback("Incorrect!");
                 
                 // Highlight the correct answer
                 const correctAnswerButton = document.querySelector(`.option-btn[data-is-correct="true"]`);
                 if (correctAnswerButton) {
-                    // ใส่ class correct เพื่อแสดงคำตอบที่ถูก
                     correctAnswerButton.classList.add('correct');
                 }
             }
@@ -752,6 +691,7 @@
             feedbackMessageEl.style.color = 'var(--color-primary)';
             
             optionsArea.innerHTML = ''; 
+            wordPromptTextEl.textContent = '';
 
             nextBtn.textContent = 'กลับหน้าหลัก';
             nextBtn.disabled = false;
@@ -759,22 +699,18 @@
 
         // --- EVENT LISTENERS ---
         
-        // Speaker button: Replay audio 
         audioButton.addEventListener('click', () => {
-             playWordAudioByUserClick();
+             playWordAudioByUserClickTTS();
         });
 
-        // Next/Go Back button
         nextBtn.addEventListener('click', () => {
-            // ตรวจสอบว่าจบรอบแล้วและปุ่มถูกเปลี่ยนเป็น "กลับหน้าหลัก"
+            synth.cancel(); // ยกเลิกการพูด Feedback ก่อนไปข้อถัดไป
             if (currentQuizIndex >= currentLevelData.questions.length - 1 && nextBtn.textContent === 'กลับหน้าหลัก') { 
-                // Back to Level Selection
                 showScreen('level-select-screen');
                 currentQuizIndex = 0; 
                 return;
             }
             
-            // Next Question
             currentQuizIndex++;
             nextQuestion();
             
@@ -785,6 +721,11 @@
         document.addEventListener('DOMContentLoaded', () => {
             createLevelButtons();
             showScreen('level-select-screen');
+            
+            // โหลด TTS Voice เมื่อเอกสารพร้อม
+            if (synth.onvoiceschanged !== undefined) {
+                synth.onvoiceschanged = initTTS;
+            }
         });
     </script>
 </body>
