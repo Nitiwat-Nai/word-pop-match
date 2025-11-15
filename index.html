@@ -3,19 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Word Pop Match - เกมจับคู่คำศัพท์ (TTS)</title>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>Word Pop Match - เกมจับคู่คำศัพท์</title> <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700;900&display=swap" rel="stylesheet">
 
     <style>
-        /* --- CSS (คงเดิมและจัดกึ่งกลางตัวเลือก) --- */
+        /* --- New Child-Friendly Color Theme (2. เปลี่ยนธีมสี) --- */
         :root {
-            --color-primary: #9C27B0; 
-            --color-secondary: #E1BEE7; 
-            --color-correct: #00BCD4; 
-            --color-wrong: #FF5252; 
-            --color-bg: #F3E5F5; 
-            --color-card: #FFFFFF; 
-            --color-button-bg: #FCE4EC; 
+            --color-primary: #FF4081; /* Pink/Fuchsia (ปุ่มลำโพง/Next) */
+            --color-secondary: #4DD0E1; /* Light Cyan (ขอบปุ่มตัวเลือก) */
+            --color-correct: #8BC34A; /* Lime Green */
+            --color-wrong: #FF7043; /* Vivid Orange */
+            --color-bg: #E0F7FA; /* Very Light Cyan (พื้นหลัง) */
+            --color-card: #FFFFFF; /* White (สำหรับ Header/ส่วนข้อมูล) */
+            --color-button-bg: #FFFDE7; /* Creamy Yellow (พื้นหลังปุ่มตัวเลือก) */
             --color-text-dark: #333333;
             --color-text-light: #FFFFFF;
         }
@@ -76,7 +75,7 @@
             padding: 1rem 0;
         }
         .level-btn {
-            background-color: #673AB7; 
+            background-color: var(--color-primary); 
             color: var(--color-text-light);
             border: none;
             padding: 1.5rem 0.5rem;
@@ -84,7 +83,7 @@
             font-size: 1.4rem;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 4px 0 #5E35B1;
+            box-shadow: 0 4px 0 #D81B60; /* Darker Pink */
             transition: transform 0.1s, box-shadow 0.1s;
         }
         .level-btn-title {
@@ -102,10 +101,10 @@
             padding: 0.5rem 0;
             font-weight: bold;
             margin-bottom: 1rem;
-            color: #4A148C; 
+            color: #C2185B; /* Deep Pink */
         }
 
-        /* Prompt Area (Speaker Button & Word Text) */
+        /* Prompt Area (Speaker Button ONLY) */
         #prompt-area {
             display: flex;
             flex-direction: column;
@@ -114,39 +113,33 @@
             margin-bottom: 1.5rem;
             min-height: 150px; 
         }
+        /* 1. เอาคำโจทย์ที่เป็นตัวอักษรออก */
+        /* #word-prompt-text ถูกลบออกจาก HTML แล้ว แต่เก็บ CSS ไว้เพื่อความปลอดภัย */
         #word-prompt-text {
-            font-size: 2.5rem; 
-            font-weight: 900;
-            margin-bottom: 10px;
-            color: var(--color-primary);
+            display: none; 
         }
         #audio-button {
             background-color: var(--color-primary); 
             border: none;
             border-radius: 50%;
-            width: 100px; 
-            height: 100px; 
-            font-size: 3em; 
+            width: 120px; /* ขยายปุ่มลำโพง */
+            height: 120px; 
+            font-size: 4em; 
             cursor: pointer;
-            box-shadow: 0 6px 0 #7B1FA2; 
+            box-shadow: 0 6px 0 #D81B60; 
             transition: transform 0.1s ease;
             color: var(--color-text-light); 
-        }
-        #audio-button:active {
-            transform: translateY(3px); 
-            box-shadow: 0 3px 0 #7B1FA2;
         }
         
         /* Choices Area (4-button Grid) */
         #options-area {
-            /* จัดกึ่งกลางแนวนอน */
             display: grid;
             grid-template-columns: 1fr 1fr; 
             gap: 15px;
             flex-grow: 1; 
             padding-bottom: 1rem;
             max-width: 400px; 
-            margin: 0 auto; /* กึ่งกลางในแนวนอน */
+            margin: 0 auto; 
             width: 100%; 
         }
         .option-btn {
@@ -163,21 +156,20 @@
             justify-content: center;
             align-items: center;
         }
-        .option-btn .item-icon {
-            font-size: 3em; 
-            margin-bottom: 5px;
-        }
+        
+        /* 5. เอารูปไอคอนออกจากตัวเลือก และเพิ่มขนาดตัวอักษร */
         .option-btn .item-word {
-            font-size: 1.1em; 
-            font-weight: bold;
+            font-size: 2em; /* ขนาดตัวอักษรใหญ่ขึ้นมาก */
+            font-weight: 900;
             color: var(--color-text-dark);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
 
         .option-btn.correct {
             border-color: var(--color-correct) !important; 
-            box-shadow: 0 0 20px #4DD0E1; 
+            box-shadow: 0 0 20px #8BC34A; 
             transform: scale(1.05);
-            background-color: #E0F7FA; 
+            background-color: #F1F8E9; /* Light Green */
         }
         .option-btn.incorrect {
             border-color: var(--color-wrong) !important; 
@@ -186,23 +178,10 @@
         }
 
         /* Footer */
-        #game-footer {
-            margin-top: 1.5rem;
-            padding-top: 1rem;
-            border-top: 1px solid #ECEFF1;
-            flex-shrink: 0; 
-        }
         #next-btn {
             background-color: var(--color-primary);
             color: var(--color-text-light);
-            border: none;
-            width: 100%;
-            padding: 1rem;
-            border-radius: 50px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 0 #7B1FA2;
+            box-shadow: 0 4px 0 #D81B60;
         }
     </style>
 </head>
@@ -210,15 +189,15 @@
 
     <div class="container">
         <header>
-            <h1>Word Pop Match (TTS)</h1>
+            <h1>Word Pop Match</h1>
         </header>
 
         <div id="level-select-screen" class="screen active">
-            <h2>🎉 เกมจับคู่ภาพและเสียง</h2>
-            <p>เลือกชุดคำศัพท์ที่คุณต้องการฝึกฝน (Level ละ 10 คำ):</p>
+            <h2>🎉 เกมจับคู่คำศัพท์</h2>
+            <p>เลือกชุดคำศัพท์ที่คุณต้องการฝึกฝน:</p>
             <div class="level-grid" id="level-grid">
                 </div>
-            <p style="padding-top: 2rem; color:#9E9E9E;">มีทั้งหมด 10 Levels x 10 คำ = 100 คำศัพท์</p>
+            <p style="padding-top: 2rem; color:#9E9E9E;">ทดสอบการฟัง 10 Levels</p>
         </div>
 
         <div id="game-screen" class="screen">
@@ -230,7 +209,6 @@
                 </div>
 
                 <div id="prompt-area">
-                    <div id="word-prompt-text"></div> 
                     <button id="audio-button" aria-label="Listen to the word">
                         <span class="speaker-icon">🔊</span>
                     </button>
@@ -246,141 +224,137 @@
             </div>
         </div>
     </div>
+    
+    <div id="word-prompt-text" style="display: none;"></div>
 
     <script>
         /* ------------------- JavaScript Core Logic (ใช้ TTS) ------------------- */
 
-        // --- DATA (ไม่ต้องมี path ไฟล์เสียงแล้ว) ---
+        // --- DATA (4. ปรับคำโจทย์และตัวเลือกให้คล้ายกัน) ---
         const ALL_LEVEL_WORDS = [
-            // LEVEL 1: Colors & Basic Objects
-            { level: 1, title: "สีและสิ่งของพื้นฐาน", questions: [
-                { word: "red", icon: "🔴" },
-                { word: "blue", icon: "🔵" },
-                { word: "yellow", icon: "🟡" },
-                { word: "green", icon: "🟢" },
-                { word: "sun", icon: "☀️" },
-                { word: "star", icon: "⭐" },
-                { word: "moon", icon: "🌙" },
-                { word: "cloud", icon: "☁️" },
-                { word: "tree", icon: "🌳" },
-                { word: "flower", icon: "🌸" },
+            // LEVEL 1: Rhyming CVC Words (ความท้าทายหลัก)
+            { level: 1, title: "เสียงสระสั้น (Rhyme)", questions: [
+                { word: "RED", correct: "RED", options: ["BED", "FED", "RED", "LID"] },
+                { word: "CAT", correct: "CAT", options: ["CUT", "HAT", "CAT", "GET"] },
+                { word: "SUN", correct: "SUN", options: ["SON", "RUN", "FUN", "SUN"] },
+                { word: "PIG", correct: "PIG", options: ["PEG", "BIG", "PIG", "BAG"] },
+                { word: "FOX", correct: "FOX", options: ["BOX", "FIX", "FAX", "FOX"] },
+                { word: "MOP", correct: "MOP", options: ["MAP", "TOP", "MOP", "MAD"] },
+                { word: "TEN", correct: "TEN", options: ["TIN", "PIN", "MEN", "TEN"] },
+                { word: "JUG", correct: "JUG", options: ["JOG", "BUG", "JUG", "BOG"] },
+                { word: "LIP", correct: "LIP", options: ["LAP", "LIP", "LEP", "SIP"] },
+                { word: "VAN", correct: "VAN", options: ["VET", "VIM", "FAN", "VAN"] },
             ]},
-            // LEVEL 2: Animals 
-            { level: 2, title: "สัตว์", questions: [
-                { word: "dog", icon: "🐕" },
-                { word: "cat", icon: "🐈" },
-                { word: "fish", icon: "🐟" },
-                { word: "bird", icon: "🐦" },
-                { word: "lion", icon: "🦁" },
-                { word: "bear", icon: "🐻" },
-                { word: "cow", icon: "🐄" },
-                { word: "pig", icon: "🐖" },
-                { word: "frog", icon: "🐸" },
-                { word: "rabbit", icon: "🐇" },
+            // LEVEL 2: Simple Vowels/Consonants (คำศัพท์ทั่วไป มี Distractor ที่คล้ายเสียง)
+            { level: 2, title: "เสียงพยัญชนะต้น", questions: [
+                { word: "DOG", correct: "DOG", options: ["DOG", "FOG", "LOG", "JOG"] },
+                { word: "CAT", correct: "CAT", options: ["SAT", "MAT", "CAT", "CUT"] },
+                { word: "FISH", correct: "FISH", options: ["DISH", "FISH", "WISH", "FUSS"] },
+                { word: "BIRD", correct: "BIRD", options: ["BEARD", "GIRL", "BIRD", "BORED"] },
+                { word: "COW", correct: "COW", options: ["NOW", "WOW", "COW", "CAN"] },
+                { word: "PIG", correct: "PIG", options: ["BIG", "PEG", "PIG", "BAG"] },
+                { word: "FROG", correct: "FROG", options: ["LOG", "FROG", "RAG", "FRAG"] },
+                { word: "BOAT", correct: "BOAT", options: ["BOOT", "GOAT", "BOAT", "BITE"] },
+                { word: "CAR", correct: "CAR", options: ["CAT", "FAR", "BAR", "CAR"] },
+                { word: "APPLE", correct: "APPLE", options: ["ORANGE", "APRIL", "APPLE", "EAGLE"] },
             ]},
-            // LEVEL 3: Fruits 
+            // LEVEL 3: Fruits (เพิ่มความท้าทายจากการฟัง)
             { level: 3, title: "ผลไม้", questions: [
-                { word: "apple", icon: "🍎" },
-                { word: "banana", icon: "🍌" },
-                { word: "grape", icon: "🍇" },
-                { word: "orange", icon: "🍊" },
-                { word: "strawberry", icon: "🍓" },
-                { word: "watermelon", icon: "🍉" },
-                { word: "kiwi", icon: "🥝" },
-                { word: "cherry", icon: "🍒" },
-                { word: "peach", icon: "🍑" },
-                { word: "pear", icon: "🍐" },
+                { word: "APPLE", correct: "APPLE", options: ["APRIL", "EAGLE", "APPLE", "ACID"] },
+                { word: "BANANA", correct: "BANANA", options: ["MANNA", "BANANA", "BANDANA", "BONANZA"] },
+                { word: "GRAPE", correct: "GRAPE", options: ["GRATE", "GREAT", "GRAPE", "GRIP"] },
+                { word: "ORANGE", correct: "ORANGE", options: ["ARRANGE", "ORANGE", "BORING", "ORION"] },
+                { word: "STRAWBERRY", correct: "STRAWBERRY", options: ["STROLL", "STRAWBERRY", "STARRY", "STRIP"] },
+                { word: "WATERMELON", correct: "WATERMELON", options: ["WATER", "WAITER", "WATERMELON", "WELON"] },
+                { word: "KIWI", correct: "KIWI", options: ["KEVIN", "KID", "KIWI", "WIKI"] },
+                { word: "CHERRY", correct: "CHERRY", options: ["CHAIR", "CHERRY", "CHEERY", "JERRY"] },
+                { word: "PEACH", correct: "PEACH", options: ["PITCH", "PEEK", "PEACH", "PENCIL"] },
+                { word: "PEAR", correct: "PEAR", options: ["PAIR", "PRAY", "PIER", "PEAR"] },
             ]},
-             // LEVEL 4: Body Parts
+             // LEVEL 4-10 ใช้โครงสร้างแบบ Rhyming 
             { level: 4, title: "อวัยวะ", questions: [
-                { word: "head", icon: "🧑" }, 
-                { word: "eye", icon: "👁️" },
-                { word: "nose", icon: "👃" },
-                { word: "mouth", icon: "👄" },
-                { word: "ear", icon: "👂" },
-                { word: "hand", icon: "✋" },
-                { word: "foot", icon: "🦶" },
-                { word: "arm", icon: "💪" },
-                { word: "leg", icon: "🦵" },
-                { word: "finger", icon: "👆" },
+                { word: "HEAD", correct: "HEAD", options: ["HAT", "HEART", "HEAD", "HAND"] }, 
+                { word: "EYE", correct: "EYE", options: ["I", "HIGH", "EYE", "EAT"] },
+                { word: "NOSE", correct: "NOSE", options: ["KNOWS", "NOSE", "NICE", "NOWS"] },
+                { word: "MOUTH", correct: "MOUTH", options: ["MOUSE", "SOUTH", "MOUTH", "MUST"] },
+                { word: "EAR", correct: "EAR", options: ["HERE", "EAR", "YEAR", "ARE"] },
+                { word: "HAND", correct: "HAND", options: ["HAVE", "HAD", "HAND", "HEAR"] },
+                { word: "FOOT", correct: "FOOT", options: ["FEET", "FOOD", "FOOT", "FUT"] },
+                { word: "ARM", correct: "ARM", options: ["HARM", "FARM", "ARM", "ALM"] },
+                { word: "LEG", correct: "LEG", options: ["LICK", "LAG", "LEG", "LUG"] },
+                { word: "FINGER", correct: "FINGER", options: ["FINGERS", "SINGER", "FINGER", "FEN"] },
             ]},
-            // LEVEL 5: Vehicles
             { level: 5, title: "ยานพาหนะ", questions: [
-                { word: "car", icon: "🚗" },
-                { word: "bus", icon: "🚌" },
-                { word: "train", icon: "🚂" },
-                { word: "bike", icon: "🚲" },
-                { word: "boat", icon: "⛵" },
-                { word: "plane", icon: "✈️" },
-                { word: "truck", icon: "🚚" },
-                { word: "scooter", icon: "🛴" },
-                { word: "taxi", icon: "🚕" },
-                { word: "ship", icon: "🚢" },
+                { word: "CAR", correct: "CAR", options: ["FAR", "CORE", "CAR", "CROW"] },
+                { word: "BUS", correct: "BUS", options: ["BOSS", "BASE", "BUS", "BUZZ"] },
+                { word: "TRAIN", correct: "TRAIN", options: ["RAIN", "TRIM", "TRAIN", "TRY"] },
+                { word: "BIKE", correct: "BIKE", options: ["BOOK", "BIKE", "BACK", "HIKE"] },
+                { word: "BOAT", correct: "BOAT", options: ["BOUGHT", "BITE", "BOAT", "BEND"] },
+                { word: "PLANE", correct: "PLANE", options: ["PLANT", "PLAY", "PLAN", "PLANE"] },
+                { word: "TRUCK", correct: "TRUCK", options: ["TRICK", "TRACK", "TUCK", "TRUCK"] },
+                { word: "SCOOTER", correct: "SCOOTER", options: ["SHOOTER", "SCHOOL", "SCOOTER", "SKATER"] },
+                { word: "TAXI", correct: "TAXI", options: ["TAX", "TACKY", "TAXI", "TESS"] },
+                { word: "SHIP", correct: "SHIP", options: ["SHEEP", "CHIP", "SKIP", "SHIP"] },
             ]},
-            // LEVEL 6: Clothes
             { level: 6, title: "เสื้อผ้า", questions: [
-                { word: "shirt", icon: "👕" },
-                { word: "dress", icon: "👗" },
-                { word: "shoes", icon: "👟" },
-                { word: "hat", icon: "🧢" },
-                { word: "socks", icon: "🧦" },
-                { word: "pants", icon: "👖" },
-                { word: "skirt", icon: "👚" },
-                { word: "coat", icon: "🧥" },
-                { word: "scarf", icon: "🧣" },
-                { word: "gloves", icon: "🧤" },
+                { word: "SHIRT", correct: "SHIRT", options: ["SHORT", "SHOT", "SHIRT", "SIT"] },
+                { word: "DRESS", correct: "DRESS", options: ["DRAW", "DRINK", "DRESS", "DREAMS"] },
+                { word: "SHOES", correct: "SHOES", options: ["SHOWS", "CHOOSE", "SHOES", "SHOT"] },
+                { word: "HAT", correct: "HAT", options: ["HUT", "HATE", "HAT", "HART"] },
+                { word: "SOCKS", correct: "SOCKS", options: ["SIX", "SOX", "SOCKS", "SAX"] },
+                { word: "PANTS", correct: "PANTS", options: ["PATIENTS", "PAINTS", "PANTS", "PUNT"] },
+                { word: "SKIRT", correct: "SKIRT", options: ["SKIP", "SKATE", "SKIRT", "SQUARE"] },
+                { word: "COAT", correct: "COAT", options: ["CUT", "COTE", "COAT", "COT"] },
+                { word: "SCARF", correct: "SCARF", options: ["SCOOP", "SCAR", "SCARF", "SKIRT"] },
+                { word: "GLOVES", correct: "GLOVES", options: ["GLOVE", "LOVES", "GLOVES", "GLUM"] },
             ]},
-            // LEVEL 7: Family
             { level: 7, title: "ครอบครัว", questions: [
-                { word: "mother", icon: "👩", },
-                { word: "father", icon: "👨" },
-                { word: "sister", icon: "👧" },
-                { word: "brother", icon: "👦" },
-                { word: "baby", icon: "👶" },
-                { word: "grandma", icon: "👵" },
-                { word: "grandpa", icon: "👴" },
-                { word: "aunt", icon: "🧑‍🦱" },
-                { word: "uncle", icon: "🧔" },
-                { word: "friend", icon: "🧑‍🤝‍🧑" },
+                { word: "MOTHER", correct: "MOTHER", options: ["BROTHER", "MUD", "MOTHER", "MASTER"] },
+                { word: "FATHER", correct: "FATHER", options: ["FARTHER", "FASTER", "FATHER", "FIGHTER"] },
+                { word: "SISTER", correct: "SISTER", options: ["SIR", "SITTER", "SISTER", "SESTER"] },
+                { word: "BROTHER", correct: "BROTHER", options: ["BREATH", "BROTHER", "BRUSH", "BUTTER"] },
+                { word: "BABY", correct: "BABY", options: ["BOBBY", "BYE", "BABY", "BUSY"] },
+                { word: "GRANDMA", correct: "GRANDMA", options: ["GRANDPA", "GRAMMAR", "GRANDMA", "GRADE"] },
+                { word: "GRANDPA", correct: "GRANDPA", options: ["GRANDMA", "GRANTER", "GRANDPA", "GRIN"] },
+                { word: "AUNT", correct: "AUNT", options: ["ANT", "AREN'T", "AUNT", "ONCE"] },
+                { word: "UNCLE", correct: "UNCLE", options: ["ANKLE", "UNCLE", "UNKLE", "INK"] },
+                { word: "FRIEND", correct: "FRIEND", options: ["FINED", "FRY", "FRIEND", "FRONT"] },
             ]},
-            // LEVEL 8: Food
             { level: 8, title: "อาหาร", questions: [
-                { word: "pizza", icon: "🍕" },
-                { word: "bread", icon: "🍞" },
-                { word: "milk", icon: "🥛" },
-                { word: "egg", icon: "🥚" },
-                { word: "cheese", icon: "🧀" },
-                { word: "carrot", icon: "🥕" },
-                { word: "soup", icon: "🥣" },
-                { word: "cake", icon: "🎂" },
-                { word: "water", icon: "💧" },
-                { word: "cookie", icon: "🍪" },
+                { word: "PIZZA", correct: "PIZZA", options: ["PEACE", "PIXEL", "PIZZA", "PETS"] },
+                { word: "BREAD", correct: "BREAD", options: ["BLED", "BROAD", "BREAD", "BIRD"] },
+                { word: "MILK", correct: "MILK", options: ["MILL", "MELK", "MILK", "MAIL"] },
+                { word: "EGG", correct: "EGG", options: ["AGE", "LEG", "EGG", "AIL"] },
+                { word: "CHEESE", correct: "CHEESE", options: ["CHAIR", "CHIN", "CHEESE", "CHEST"] },
+                { word: "CARROT", correct: "CARROT", options: ["CARRY", "CAR", "CARROT", "CURRY"] },
+                { word: "SOUP", correct: "SOUP", options: ["SOP", "SOAP", "SOUP", "SUP"] },
+                { word: "CAKE", correct: "CAKE", options: ["CATCH", "COOK", "CAKE", "KICK"] },
+                { word: "WATER", correct: "WATER", options: ["WAITER", "WETTER", "WATER", "WHITER"] },
+                { word: "COOKIE", correct: "COOKIE", options: ["CUCKOO", "COOKY", "COOKIE", "KICK"] },
             ]},
-            // LEVEL 9: Actions
             { level: 9, title: "กริยา", questions: [
-                { word: "run", icon: "🏃" },
-                { word: "jump", icon: "🤸" },
-                { word: "sleep", icon: "😴" },
-                { word: "eat", icon: "🍽️" },
-                { word: "drink", icon: "🥤" },
-                { word: "read", icon: "📖" },
-                { word: "sing", icon: "🎤" },
-                { word: "walk", icon: "🚶" },
-                { word: "play", icon: "🤹" },
-                { word: "talk", icon: "🗣️" },
+                { word: "RUN", correct: "RUN", options: ["WREN", "RAN", "RUN", "RAW"] },
+                { word: "JUMP", correct: "JUMP", options: ["DUMP", "GUM", "JUMP", "GEM"] },
+                { word: "SLEEP", correct: "SLEEP", options: ["SLIP", "SLAP", "SLEEP", "SLIT"] },
+                { word: "EAT", correct: "EAT", options: ["IT", "EIGHT", "EAT", "HIT"] },
+                { word: "DRINK", correct: "DRINK", options: ["DRANK", "DREAM", "DRINK", "DRIVE"] },
+                { word: "READ", correct: "READ", options: ["RED", "REED", "READ", "RID"] },
+                { word: "SING", correct: "SING", options: ["SANG", "SIN", "SING", "SONG"] },
+                { word: "WALK", correct: "WALK", options: ["WOKE", "WORK", "WALK", "WACK"] },
+                { word: "PLAY", correct: "PLAY", options: ["PULL", "PLACE", "PLAY", "PLOW"] },
+                { word: "TALK", correct: "TALK", options: ["WALK", "TOLL", "TALK", "TUCK"] },
             ]},
-            // LEVEL 10: Adjectives
             { level: 10, title: "คำคุณศัพท์", questions: [
-                { word: "happy", icon: "😄" },
-                { word: "sad", icon: "😥" },
-                { word: "big", icon: "⬆️" },
-                { word: "small", icon: "⬇️" },
-                { word: "hot", icon: "🔥" },
-                { word: "cold", icon: "🥶" },
-                { word: "fast", icon: "💨" },
-                { word: "slow", icon: "🐌" },
-                { word: "clean", icon: "🧼" },
-                { word: "dirty", icon: "💩" },
+                { word: "HAPPY", correct: "HAPPY", options: ["HOPPY", "HEP", "HAPPY", "HI-P"] },
+                { word: "SAD", correct: "SAD", options: ["SAID", "SAT", "SAD", "SEND"] },
+                { word: "BIG", correct: "BIG", options: ["BAG", "BEG", "BIG", "BOG"] },
+                { word: "SMALL", correct: "SMALL", options: ["SMELL", "SMASH", "SMALL", "MALL"] },
+                { word: "HOT", correct: "HOT", options: ["HUT", "HATE", "HOT", "HEART"] },
+                { word: "COLD", correct: "COLD", options: ["CALL", "CODE", "COLD", "COULD"] },
+                { word: "FAST", correct: "FAST", options: ["FEST", "FIST", "FAST", "FACE"] },
+                { word: "SLOW", correct: "SLOW", options: ["SLAUGHTER", "FLOW", "SLOW", "SLIM"] },
+                { word: "CLEAN", correct: "CLEAN", options: ["CLIN", "CLONE", "CLEAN", "CLEAR"] },
+                { word: "DIRTY", correct: "DIRTY", options: ["DUSTY", "DARE", "DIRTY", "DEER"] },
             ]},
         ];
 
@@ -394,7 +368,7 @@
         const levelTitleEl = document.getElementById('level-title');
         const qCountEl = document.getElementById('q-count');
         const scoreEl = document.getElementById('score');
-        const wordPromptTextEl = document.getElementById('word-prompt-text'); 
+        // const wordPromptTextEl = document.getElementById('word-prompt-text'); // **ถูกลบใน HTML แต่ต้องคงไว้ใน JS เพื่อป้องกัน error**
         const audioButton = document.getElementById('audio-button');
         const feedbackMessageEl = document.getElementById('feedback-message');
         const optionsArea = document.getElementById('options-area');
@@ -411,7 +385,7 @@
         let currentQuizIndex = 0; 
         let score = 0;
         let isAnswered = false;
-        let currentWord = {};
+        let currentWord = {}; // เก็บข้อมูลคำโจทย์ปัจจุบัน
         let audioPlayCount = 0; 
 
         // --- TTS FUNCTIONS ---
@@ -420,6 +394,7 @@
             if (voice) return;
 
             const voices = synth.getVoices();
+            // พยายามหาเสียงภาษาอังกฤษแบบ US
             voice = voices.find(v => v.lang === 'en-US' || v.lang.startsWith('en-')); 
             
             if (!voice && voices.length > 0) {
@@ -467,6 +442,7 @@
         function tryAutoPlayTTS() {
             if (isAnswered) return;
             
+            // อ่านเฉพาะคำโจทย์ (currentWord.word)
             speakWord(currentWord.word);
             audioPlayCount = 1; 
             updateAudioButtonState();
@@ -511,7 +487,6 @@
 
         function createLevelButtons() {
             levelGridEl.innerHTML = '';
-            // **การแก้ไข: ลบ initTTS() ออกเพื่อให้การสร้างปุ่มเป็นไปอย่างรวดเร็ว**
             
             ALL_LEVEL_WORDS.forEach(data => {
                 const btn = document.createElement('button');
@@ -553,7 +528,6 @@
             currentLevelData = ALL_LEVEL_WORDS.find(data => data.level === levelId);
             currentQuizIndex = 0;
             score = 0; 
-            // **คำสั่งเปลี่ยนหน้าจอ**
             showScreen('game-screen'); 
             nextQuestion();
         }
@@ -573,33 +547,23 @@
             feedbackMessageEl.style.color = 'var(--color-text-dark)';
 
             optionsArea.innerHTML = ''; 
-            wordPromptTextEl.textContent = ''; 
+            
+            // เนื่องจากเราลบคำโจทย์ที่เป็น Text ออกไปแล้ว จึงไม่ต้องแสดงผล
+            // document.getElementById('word-prompt-text').textContent = ''; 
             
             updateStatusBar();
             setupQuestion();
         }
 
+        // ฟังก์ชันนี้ง่ายขึ้นเพราะตัวเลือกถูกกำหนดไว้ใน Data แล้ว
         function getGameOptions() {
-            const currentLevelWords = currentLevelData.questions;
-            const correctWord = currentLevelWords[currentQuizIndex]; 
+            const currentQuestion = currentLevelData.questions[currentQuizIndex]; 
+            currentWord = currentQuestion;
             
-            let options = [correctWord];
-            const allWords = ALL_LEVEL_WORDS.flatMap(l => l.questions);
-            const allWordsExcludingCorrect = allWords.filter(w => w.word !== correctWord.word);
+            // สุ่ม shuffle ตัวเลือกที่ถูกกำหนดมา
+            const options = currentQuestion.options.map(word => ({ word: word, isCorrect: word === currentQuestion.correct }));
             
-            const shuffledDistractors = allWordsExcludingCorrect.sort(() => 0.5 - Math.random());
-            const distractors = shuffledDistractors.slice(0, OPTIONS_COUNT - 1);
-            
-            options = [...options, ...distractors];
-
-            while (options.length > OPTIONS_COUNT) {
-                 options.pop();
-            }
-            
-            options.sort(() => Math.random() - 0.5); 
-            
-            currentWord = correctWord;
-            return options.slice(0, OPTIONS_COUNT);
+            return options.sort(() => Math.random() - 0.5); 
         }
 
 
@@ -611,23 +575,20 @@
                 const button = document.createElement('button');
                 button.className = 'option-btn';
                 button.dataset.word = item.word;
-                button.dataset.isCorrect = item.word === currentWord.word;
+                button.dataset.isCorrect = item.isCorrect;
                 
+                // 5. ลบไอคอน (item-icon) ออกจากปุ่ม
                 button.innerHTML = `
-                    <span class="item-icon">${item.icon}</span>
                     <span class="item-word">${item.word.toUpperCase()}</span>
                 `;
                 button.addEventListener('click', handleAnswer);
                 optionsArea.appendChild(button);
             });
             
-            // 2. แสดงคำโจทย์ (TEXT) 
-            wordPromptTextEl.textContent = currentWord.word.toUpperCase();
-
-            // 3. ลองเล่นเสียงอัตโนมัติ 
+            // 2. ลองเล่นเสียงอัตโนมัติ (TTS จะอ่าน currentWord.word)
             tryAutoPlayTTS();
             
-            // 4. อัปเดตข้อความแจ้งเตือนเริ่มต้น 
+            // 3. อัปเดตข้อความแจ้งเตือนเริ่มต้น 
             updateAudioButtonState(); 
         }
 
@@ -656,7 +617,7 @@
                 speakFeedback("Correct!");
             } else {
                 selectedButton.classList.add('incorrect');
-                feedbackMessageEl.textContent = `❌ ผิด! คำตอบคือ ${currentWord.word.toUpperCase()}`;
+                feedbackMessageEl.textContent = `❌ ผิด! คำตอบคือ ${currentWord.correct.toUpperCase()}`;
                 feedbackMessageEl.style.color = 'var(--color-wrong)';
                 speakFeedback("Incorrect!");
                 
@@ -686,8 +647,7 @@
             feedbackMessageEl.style.color = 'var(--color-primary)';
             
             optionsArea.innerHTML = ''; 
-            wordPromptTextEl.textContent = '';
-
+            
             nextBtn.textContent = 'กลับหน้าหลัก';
             nextBtn.disabled = false;
         }
