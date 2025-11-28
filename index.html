@@ -2,232 +2,250 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Word Pop Match</title>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;800&family=Fredoka:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kodchasan:wght@400;600;700&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
 
     <style>
-        /* --- MODERN & PLAYFUL THEME --- */
+        /* --- MODERN & BEAUTIFUL THEME (Cotton Candy Glass) --- */
         :root {
-            /* สีหลักแบบพาสเทลสดใส */
-            --bg-gradient: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 100%);
-            --card-bg: rgba(255, 255, 255, 0.92); /* พื้นหลังกึ่งโปร่งแสง */
+            /* พื้นหลัง Gradient สวยงาม สบายตา */
+            --bg-gradient: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
             
-            --primary-color: #FF6B6B; /* สีหลัก (แดงอมชมพู) */
-            --primary-shadow: #D64545;
+            /* Card แบบกระจก (Glassmorphism) */
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.6);
             
-            --secondary-color: #4ECDC4; /* สีรอง (เขียวมิ้นต์) */
-            --secondary-shadow: #369B93;
+            /* สีหลัก */
+            --primary-color: #6C5CE7; /* ม่วงสดใส */
+            --primary-shadow: #4834d4;
+            
+            --secondary-color: #00CEC9; /* เขียวมิ้นต์ */
+            --secondary-shadow: #00b894;
 
-            --correct-color: #88D8B0; /* เขียวพาสเทล */
-            --correct-shadow: #5FB38D;
+            --correct-bg: #00b894;
+            --correct-shadow: #019074;
             
-            --wrong-color: #FF8A80; /* แดงพาสเทล */
-            --wrong-shadow: #D15F55;
+            --wrong-bg: #ff7675;
+            --wrong-shadow: #d63031;
 
-            --text-main: #4A4A4A;
-            --text-light: #FFFFFF;
+            --text-dark: #2d3436;
+            --text-gray: #636e72;
             
-            --border-radius: 20px;
+            --radius-xl: 24px;
+            --radius-md: 16px;
         }
 
-        /* รีเซ็ตค่า */
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none; /* ป้องกันการเลือกข้อความ */
+        }
 
         body {
-            font-family: 'Sarabun', sans-serif;
-            background: var(--bg-gradient);
-            color: var(--text-main);
+            font-family: 'Kodchasan', sans-serif; /* ฟอนต์ไทยหัวกลม */
+            background-image: var(--bg-gradient);
+            color: var(--text-dark);
             margin: 0;
-            padding: 15px; /* เพิ่มพื้นที่ขอบในมือถือ */
+            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center; 
-            min-height: 100vh;
-            text-align: center;
+            height: 100dvh; /* เต็มจอแบบ Dynamic สำหรับมือถือ */
+            overflow: hidden;
         }
 
-        /* คอนเทนเนอร์หลัก (Card Style) */
+        /* คอนเทนเนอร์หลัก */
         .container {
             width: 100%;
-            max-width: 480px; /* ขนาดเหมาะกับมือถือ */
-            background-color: var(--card-bg);
-            backdrop-filter: blur(10px); /* เอฟเฟกต์กระจก */
-            border-radius: var(--border-radius);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-            min-height: 85vh;
-            max-height: 95vh;
+            height: 100%;
+            max-width: 500px; /* จำกัดความกว้างบน Tablet/PC */
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px); /* เบลอพื้นหลัง */
+            -webkit-backdrop-filter: blur(20px);
             display: flex;
             flex-direction: column;
-            overflow: hidden; /* ป้องกันการเลื่อนหลุดกรอบ */
-            border: 2px solid #FFFFFF;
+            position: relative;
+            box-shadow: 0 0 40px rgba(0,0,0,0.1);
         }
 
         /* Header */
         header {
-            background: transparent;
-            padding: 1rem;
-            border-bottom: 2px dashed rgba(0,0,0,0.05);
+            padding: 15px 20px;
+            text-align: center;
+            flex-shrink: 0;
         }
         header h1 {
-            font-family: 'Fredoka', sans-serif; /* ฟอนต์น่ารักสำหรับชื่อเกม */
+            font-family: 'Nunito', sans-serif; /* ฟอนต์อังกฤษหนาๆ น่ารัก */
             font-size: 2rem;
             margin: 0;
             color: var(--primary-color);
-            text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+            text-shadow: 2px 2px 0px rgba(255,255,255,1);
             letter-spacing: 1px;
+            font-weight: 900;
         }
 
-        /* Screen Management */
+        /* Screen Manager */
         .screen {
-            padding: 1rem;
-            display: none; 
-            flex-grow: 1;
+            display: none;
             flex-direction: column;
-            overflow-y: auto; /* ให้เลื่อนได้ถ้าเนื้อหาล้น */
+            flex-grow: 1;
+            padding: 15px 20px;
+            overflow-y: auto;
+            height: 100%;
         }
         .screen.active {
             display: flex;
         }
 
-        /* --- Level Selection (Grid) --- */
-        #level-select-screen .level-grid {
+        /* --- Level Select Screen --- */
+        #level-select-screen .header-text {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #level-select-screen h2 { margin: 0; color: var(--text-dark); }
+        #level-select-screen p { margin: 5px 0 0 0; color: var(--text-gray); font-size: 0.9rem; }
+
+        .level-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr); /* 4 คอลัมน์ในมือถือ */
-            gap: 10px;
-            padding: 10px 0;
+            grid-template-columns: repeat(4, 1fr); /* 4 คอลัมน์ */
+            gap: 12px;
+            padding-bottom: 20px;
         }
         
         .level-btn {
-            background-color: #FFFFFF;
+            aspect-ratio: 1/1;
+            background: white;
+            border: 2px solid #EEE;
+            border-radius: var(--radius-md);
             color: var(--primary-color);
-            border: 2px solid var(--primary-color);
-            border-radius: 12px;
-            aspect-ratio: 1/1; /* ปุ่มจัตุรัส */
-            font-family: 'Fredoka', sans-serif;
-            font-size: 1.2rem;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 0 var(--primary-shadow);
-            transition: transform 0.1s, box-shadow 0.1s;
+            font-family: 'Nunito', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 800;
             display: flex;
             justify-content: center;
             align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #DDD;
+            transition: all 0.1s;
         }
         .level-btn:active {
             transform: translateY(4px);
-            box-shadow: 0 0 0 var(--primary-shadow);
+            box-shadow: none;
         }
 
-        /* --- Game Screen Layout --- */
+        /* --- Game Screen --- */
         #game-screen {
-            justify-content: space-between; /* กระจายเนื้อหา */
-            padding-bottom: 0; /* พื้นที่สำหรับปุ่ม Footer */
+            justify-content: space-between;
         }
 
+        /* Status Bar */
         .status-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background: rgba(255,255,255,0.6);
+            padding: 10px 15px;
+            border-radius: 50px;
+            margin-bottom: 20px;
             font-weight: 700;
-            color: #888;
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-            background: rgba(255,255,255,0.5);
-            padding: 8px 15px;
-            border-radius: 30px;
+            color: var(--primary-color);
+            border: 1px solid white;
         }
-        #score { color: var(--primary-color); }
 
-        /* Speaker Button (Hero Section) */
+        /* Area ตรงกลาง (ลำโพง + เฉลย) */
         #prompt-area {
             flex-grow: 1;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: center; /* จัดกึ่งกลางแนวตั้ง */
             align-items: center;
-            margin-bottom: 1rem;
-        }
-        #audio-button {
-            background-color: var(--secondary-color); 
-            border: none;
-            border-radius: 50%;
-            width: 110px; 
-            height: 110px; 
-            font-size: 3.5rem; 
-            cursor: pointer;
-            box-shadow: 0 8px 0 var(--secondary-shadow); 
-            transition: all 0.1s ease;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        #audio-button:active {
-            transform: translateY(6px);
-            box-shadow: 0 2px 0 var(--secondary-shadow);
-        }
-        #audio-button:disabled {
-            filter: grayscale(0.8);
-            opacity: 0.7;
-            transform: translateY(6px);
-            box-shadow: 0 2px 0 #999;
-        }
-        #feedback-message {
-            margin-top: 15px;
-            font-size: 1.1rem;
-            height: 1.5em; /* จองพื้นที่ */
+            min-height: 200px;
         }
 
-        /* Choices Grid (สำคัญสำหรับมือถือ) */
-        #options-area {
-            display: grid;
-            grid-template-columns: 1fr 1fr; /* 2 คอลัมน์ */
-            gap: 12px;
-            width: 100%;
-            margin-bottom: 1rem;
-        }
-        
-        .option-btn {
-            background-color: white;
-            border: 2px solid #EEE;
-            border-radius: 16px;
-            padding: 15px 5px; /* ลด padding ข้าง */
-            cursor: pointer;
-            min-height: 70px; /* กำหนดความสูงขั้นต่ำ */
+        #audio-button {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            border: 4px solid white;
+            box-shadow: 0 10px 20px rgba(9, 132, 227, 0.3);
             display: flex;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 4px 0 #DDD;
-            transition: all 0.1s;
+            font-size: 4rem;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        #audio-button:active { transform: scale(0.95); }
+        #audio-button span { filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2)); }
+
+        /* ข้อความเฉลย (สำคัญ) */
+        #feedback-area {
+            margin-top: 25px;
+            text-align: center;
+            min-height: 80px; /* จองพื้นที่ */
+        }
+        #feedback-word {
+            font-family: 'Nunito', sans-serif;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--primary-color);
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+        #feedback-thai {
+            font-size: 1.4rem;
+            color: var(--text-gray);
+            font-weight: 600;
+        }
+
+        /* ตัวเลือกคำตอบ */
+        #options-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .option-btn {
+            background: white;
+            border: 2px solid transparent;
+            border-radius: var(--radius-xl);
+            padding: 15px 5px;
+            min-height: 75px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
         }
         
         .option-btn .item-word {
-            font-family: 'Fredoka', sans-serif;
-            font-size: 1.6rem; /* ปรับขนาดให้พอดีมือถือ */
-            font-weight: 600;
-            color: var(--text-main);
-            line-height: 1.1;
-            word-break: break-word; /* ป้องกันคำตกขอบ */
+            font-family: 'Nunito', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            z-index: 2;
         }
 
-        .option-btn:active {
-            transform: translateY(4px);
-            box-shadow: 0 0 0 #DDD;
-        }
+        /* States ของปุ่ม */
+        .option-btn:active { transform: scale(0.98); }
 
-        /* สถานะถูก/ผิด */
         .option-btn.correct {
-            background-color: var(--correct-color);
-            border-color: var(--correct-shadow);
-            box-shadow: 0 4px 0 var(--correct-shadow);
+            background: var(--correct-bg);
+            box-shadow: 0 5px 0 var(--correct-shadow);
+            border-color: white;
         }
         .option-btn.correct .item-word { color: white; }
 
         .option-btn.incorrect {
-            background-color: var(--wrong-color);
-            border-color: var(--wrong-shadow);
-            box-shadow: 0 4px 0 var(--wrong-shadow);
+            background: var(--wrong-bg);
+            box-shadow: 0 5px 0 var(--wrong-shadow);
+            border-color: white;
             animation: shake 0.4s;
         }
         .option-btn.incorrect .item-word { color: white; }
@@ -238,39 +256,31 @@
             75% {transform: translateX(5px);}
         }
 
-        /* Footer (Sticky Bottom Button) */
+        /* Footer (ปุ่ม Next) */
         #game-footer {
-            padding: 1rem 0;
-            width: 100%;
+            padding-bottom: 20px; /* เว้นขอบล่าง */
         }
+        
         #next-btn {
             width: 100%;
-            background-color: var(--primary-color);
+            background: var(--primary-color);
             color: white;
             border: none;
-            padding: 16px;
+            padding: 18px;
             border-radius: 50px;
             font-size: 1.2rem;
-            font-weight: 800;
-            font-family: 'Sarabun', sans-serif;
+            font-family: 'Kodchasan', sans-serif;
+            font-weight: 700;
             cursor: pointer;
-            box-shadow: 0 6px 0 var(--primary-shadow);
-            transition: all 0.1s;
+            box-shadow: 0 8px 20px rgba(108, 92, 231, 0.4);
+            transition: all 0.2s;
         }
-        #next-btn:active {
-            transform: translateY(4px);
-            box-shadow: 0 2px 0 var(--primary-shadow);
-        }
+        #next-btn:active { transform: scale(0.98); }
         #next-btn:disabled {
-            background-color: #CCC;
-            box-shadow: 0 6px 0 #999;
-            cursor: not-allowed;
+            background: #dfe6e9;
+            color: #b2bec3;
+            box-shadow: none;
         }
-
-        /* ปรับแต่ง Scrollbar ให้สวยงาม */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 10px; }
 
     </style>
 </head>
@@ -282,284 +292,285 @@
         </header>
 
         <div id="level-select-screen" class="screen active">
-            <div style="text-align: left; padding: 0 5px;">
-                <h2 style="margin: 0; color: #555;">เลือกด่านฝึกฝน</h2>
-                <p style="margin: 5px 0 15px 0; color: #888; font-size: 0.9rem;">20 Levels • 200 คำศัพท์</p>
+            <div class="header-text">
+                <h2>เลือกด่านฝึกฝน</h2>
+                <p>20 Levels • 200 คำศัพท์พร้อมคำแปล</p>
             </div>
-            
-            <div class="level-grid" id="level-grid">
-                </div>
+            <div class="level-grid" id="level-grid"></div>
         </div>
 
         <div id="game-screen" class="screen">
-            <div class="top-content">
-                <div class="status-bar">
-                    <span id="level-title">Level 1</span>
-                    <span id="q-count">1/10</span>
-                </div>
-
-                <div id="prompt-area">
-                    <button id="audio-button" aria-label="Listen">
-                        <span>🔊</span>
-                    </button>
-                    <div id="feedback-message">แตะเพื่อฟังเสียง</div>
-                </div>
-
-                <div id="options-area">
-                    </div>
+            <div class="status-bar">
+                <span id="level-title">Level 1</span>
+                <span id="q-count">1/10</span>
             </div>
 
-            <div id="game-footer">
-                <button id="next-btn" disabled>ข้อถัดไป ➜</button>
+            <div id="prompt-area">
+                <div id="audio-button">
+                    <span>🔊</span>
+                </div>
+                
+                <div id="feedback-area">
+                    <div id="feedback-word"></div>
+                    <div id="feedback-thai">แตะลำโพงเพื่อฟัง</div>
+                </div>
+            </div>
+
+            <div>
+                <div id="options-area"></div>
+                
+                <div id="game-footer">
+                    <button id="next-btn" disabled>ข้อถัดไป ➜</button>
+                </div>
             </div>
         </div>
     </div>
-    
+
     <div id="word-prompt-text" style="display: none;"></div>
 
     <script>
-        /* ------------------- DATA (20 Levels, 10 Words Each) ------------------- */
-        // ข้อมูลทั้งหมดเป็นตัวพิมพ์เล็ก (lowercase) เพื่อให้ TTS อ่านถูกต้อง 100%
+        // --- DATA (20 Levels with MEANING) ---
+        // เพิ่ม Property 'meaning' สำหรับภาษาไทย
         const ALL_LEVEL_WORDS = [
             { level: 1, title: "สระ A (สั้น)", questions: [
-                { word: "cat", correct: "cat", options: ["cut", "cot", "hat", "cat"] },
-                { word: "bat", correct: "bat", options: ["bet", "bit", "but", "bat"] },
-                { word: "map", correct: "map", options: ["mop", "man", "mate", "map"] },
-                { word: "mad", correct: "mad", options: ["bed", "mud", "made", "mad"] },
-                { word: "fan", correct: "fan", options: ["fin", "fun", "fed", "fan"] },
-                { word: "can", correct: "can", options: ["con", "cut", "ken", "can"] },
-                { word: "wag", correct: "wag", options: ["wig", "web", "wog", "wag"] },
-                { word: "gap", correct: "gap", options: ["gab", "got", "get", "gap"] },
-                { word: "jam", correct: "jam", options: ["jem", "jim", "gum", "jam"] },
-                { word: "dad", correct: "dad", options: ["did", "dot", "dude", "dad"] }
+                { word: "cat", meaning: "แมว", correct: "cat", options: ["cut", "cot", "hat", "cat"] },
+                { word: "bat", meaning: "ค้างคาว", correct: "bat", options: ["bet", "bit", "but", "bat"] },
+                { word: "map", meaning: "แผนที่", correct: "map", options: ["mop", "man", "mate", "map"] },
+                { word: "mad", meaning: "โกรธ", correct: "mad", options: ["bed", "mud", "made", "mad"] },
+                { word: "fan", meaning: "พัดลม", correct: "fan", options: ["fin", "fun", "fed", "fan"] },
+                { word: "can", meaning: "กระป๋อง", correct: "can", options: ["con", "cut", "ken", "can"] },
+                { word: "wag", meaning: "กระดิก", correct: "wag", options: ["wig", "web", "wog", "wag"] },
+                { word: "gap", meaning: "ช่องว่าง", correct: "gap", options: ["gab", "got", "get", "gap"] },
+                { word: "jam", meaning: "แยม", correct: "jam", options: ["jem", "jim", "gum", "jam"] },
+                { word: "dad", meaning: "พ่อ", correct: "dad", options: ["did", "dot", "dude", "dad"] }
             ]},
             { level: 2, title: "สระ E, I (สั้น)", questions: [
-                { word: "red", correct: "red", options: ["rad", "rid", "rod", "red"] },
-                { word: "ten", correct: "ten", options: ["tin", "tan", "ton", "ten"] },
-                { word: "bed", correct: "bed", options: ["bid", "bad", "bud", "bed"] },
-                { word: "pin", correct: "pin", options: ["pan", "pen", "pun", "pin"] },
-                { word: "big", correct: "big", options: ["bag", "bug", "beg", "big"] },
-                { word: "lip", correct: "lip", options: ["lap", "lop", "lup", "lip"] },
-                { word: "six", correct: "six", options: ["sax", "sex", "sux", "six"] },
-                { word: "jet", correct: "jet", options: ["jot", "jig", "jag", "jet"] },
-                { word: "hen", correct: "hen", options: ["han", "hon", "him", "hen"] },
-                { word: "kit", correct: "kit", options: ["cat", "cot", "cut", "kit"] }
+                { word: "red", meaning: "สีแดง", correct: "red", options: ["rad", "rid", "rod", "red"] },
+                { word: "ten", meaning: "สิบ", correct: "ten", options: ["tin", "tan", "ton", "ten"] },
+                { word: "bed", meaning: "เตียง", correct: "bed", options: ["bid", "bad", "bud", "bed"] },
+                { word: "pin", meaning: "เข็มหมุด", correct: "pin", options: ["pan", "pen", "pun", "pin"] },
+                { word: "big", meaning: "ใหญ่", correct: "big", options: ["bag", "bug", "beg", "big"] },
+                { word: "lip", meaning: "ริมฝีปาก", correct: "lip", options: ["lap", "lop", "lup", "lip"] },
+                { word: "six", meaning: "หก", correct: "six", options: ["sax", "sex", "sux", "six"] },
+                { word: "jet", meaning: "เครื่องบินเจ็ท", correct: "jet", options: ["jot", "jig", "jag", "jet"] },
+                { word: "hen", meaning: "แม่ไก่", correct: "hen", options: ["han", "hon", "him", "hen"] },
+                { word: "kit", meaning: "ชุดอุปกรณ์", correct: "kit", options: ["cat", "cot", "cut", "kit"] }
             ]},
             { level: 3, title: "สระ O, U (สั้น)", questions: [
-                { word: "fox", correct: "fox", options: ["fix", "fex", "fax", "fox"] },
-                { word: "sun", correct: "sun", options: ["son", "sin", "san", "sun"] },
-                { word: "box", correct: "box", options: ["back", "bix", "bush", "box"] },
-                { word: "dog", correct: "dog", options: ["dig", "dag", "dug", "dog"] },
-                { word: "cup", correct: "cup", options: ["cap", "cop", "kip", "cup"] },
-                { word: "nut", correct: "nut", options: ["not", "nat", "net", "nut"] },
-                { word: "bug", correct: "bug", options: ["bag", "big", "bog", "bug"] },
-                { word: "mop", correct: "mop", options: ["map", "mip", "mup", "mop"] },
-                { word: "hot", correct: "hot", options: ["hat", "hit", "hut", "hot"] },
-                { word: "run", correct: "run", options: ["ran", "rin", "rock", "run"] }
+                { word: "fox", meaning: "สุนัขจิ้งจอก", correct: "fox", options: ["fix", "fex", "fax", "fox"] },
+                { word: "sun", meaning: "พระอาทิตย์", correct: "sun", options: ["son", "sin", "san", "sun"] },
+                { word: "box", meaning: "กล่อง", correct: "box", options: ["back", "bix", "bush", "box"] },
+                { word: "dog", meaning: "สุนัข", correct: "dog", options: ["dig", "dag", "dug", "dog"] },
+                { word: "cup", meaning: "ถ้วย", correct: "cup", options: ["cap", "cop", "kip", "cup"] },
+                { word: "nut", meaning: "ถั่ว", correct: "nut", options: ["not", "nat", "net", "nut"] },
+                { word: "bug", meaning: "แมลง", correct: "bug", options: ["bag", "big", "bog", "bug"] },
+                { word: "mop", meaning: "ไม้ถูพื้น", correct: "mop", options: ["map", "mip", "mup", "mop"] },
+                { word: "hot", meaning: "ร้อน", correct: "hot", options: ["hat", "hit", "hut", "hot"] },
+                { word: "run", meaning: "วิ่ง", correct: "run", options: ["ran", "rin", "rock", "run"] }
             ]},
             { level: 4, title: "สระผสม 1", questions: [
-                { word: "swim", correct: "swim", options: ["swam", "swum", "slim", "swim"] },
-                { word: "desk", correct: "desk", options: ["disk", "dusk", "dice", "desk"] },
-                { word: "crab", correct: "crab", options: ["crap", "crib", "crop", "crab"] },
-                { word: "trip", correct: "trip", options: ["trap", "top", "type", "trip"] },
-                { word: "slug", correct: "slug", options: ["slab", "slop", "slim", "slug"] },
-                { word: "plum", correct: "plum", options: ["plan", "plot", "plume", "plum"] },
-                { word: "frog", correct: "frog", options: ["flag", "fry", "frag", "frog"] },
-                { word: "dress", correct: "dress", options: ["draw", "drop", "drift", "dress"] },
-                { word: "belt", correct: "belt", options: ["bill", "bolt", "bent", "belt"] },
-                { word: "camp", correct: "camp", options: ["comb", "crimp", "clam", "camp"] }
+                { word: "swim", meaning: "ว่ายน้ำ", correct: "swim", options: ["swam", "swum", "slim", "swim"] },
+                { word: "desk", meaning: "โต๊ะเรียน", correct: "desk", options: ["disk", "dusk", "dice", "desk"] },
+                { word: "crab", meaning: "ปู", correct: "crab", options: ["crap", "crib", "crop", "crab"] },
+                { word: "trip", meaning: "การเดินทาง", correct: "trip", options: ["trap", "top", "type", "trip"] },
+                { word: "slug", meaning: "ทาก", correct: "slug", options: ["slab", "slop", "slim", "slug"] },
+                { word: "plum", meaning: "ลูกพลัม", correct: "plum", options: ["plan", "plot", "plume", "plum"] },
+                { word: "frog", meaning: "กบ", correct: "frog", options: ["flag", "fry", "frag", "frog"] },
+                { word: "dress", meaning: "ชุดกระโปรง", correct: "dress", options: ["draw", "drop", "drift", "dress"] },
+                { word: "belt", meaning: "เข็มขัด", correct: "belt", options: ["bill", "bolt", "bent", "belt"] },
+                { word: "camp", meaning: "ค่ายพักแรม", correct: "camp", options: ["comb", "crimp", "clam", "camp"] }
             ]},
             { level: 5, title: "ควบกล้ำ L", questions: [
-                { word: "blue", correct: "blue", options: ["blow", "blew", "buy", "blue"] },
-                { word: "clay", correct: "clay", options: ["clue", "clash", "class", "clay"] },
-                { word: "glad", correct: "glad", options: ["glass", "gold", "grip", "glad"] },
-                { word: "plan", correct: "plan", options: ["plane", "play", "plus", "plan"] },
-                { word: "flea", correct: "flea", options: ["fly", "free", "flat", "flea"] },
-                { word: "slip", correct: "slip", options: ["slap", "slope", "sleep", "slip"] },
-                { word: "club", correct: "club", options: ["clap", "clog", "cube", "club"] },
-                { word: "flute", correct: "flute", options: ["float", "fruit", "foot", "flute"] },
-                { word: "glove", correct: "glove", options: ["glue", "glass", "globe", "glove"] },
-                { word: "plank", correct: "plank", options: ["plane", "plan", "pinch", "plank"] }
+                { word: "blue", meaning: "สีฟ้า", correct: "blue", options: ["blow", "blew", "buy", "blue"] },
+                { word: "clay", meaning: "ดินเหนียว", correct: "clay", options: ["clue", "clash", "class", "clay"] },
+                { word: "glad", meaning: "ดีใจ", correct: "glad", options: ["glass", "gold", "grip", "glad"] },
+                { word: "plan", meaning: "แผนการ", correct: "plan", options: ["plane", "play", "plus", "plan"] },
+                { word: "flea", meaning: "หมัด(แมลง)", correct: "flea", options: ["fly", "free", "flat", "flea"] },
+                { word: "slip", meaning: "ลื่น", correct: "slip", options: ["slap", "slope", "sleep", "slip"] },
+                { word: "club", meaning: "ชมรม", correct: "club", options: ["clap", "clog", "cube", "club"] },
+                { word: "flute", meaning: "ขลุ่ย", correct: "flute", options: ["float", "fruit", "foot", "flute"] },
+                { word: "glove", meaning: "ถุงมือ", correct: "glove", options: ["glue", "glass", "globe", "glove"] },
+                { word: "plank", meaning: "แผ่นไม้", correct: "plank", options: ["plane", "plan", "pinch", "plank"] }
             ]},
             { level: 6, title: "ควบกล้ำ R", questions: [
-                { word: "press", correct: "press", options: ["price", "pray", "prince", "press"] },
-                { word: "trip", correct: "trip", options: ["trap", "top", "type", "trip"] },
-                { word: "bring", correct: "bring", options: ["brain", "rang", "ring", "bring"] },
-                { word: "drop", correct: "drop", options: ["drip", "drag", "drove", "drop"] },
-                { word: "free", correct: "free", options: ["fly", "frog", "fry", "free"] },
-                { word: "grape", correct: "grape", options: ["great", "grip", "grace", "grape"] },
-                { word: "crib", correct: "crib", options: ["crop", "crab", "crip", "crib"] },
-                { word: "frame", correct: "frame", options: ["firm", "farm", "foam", "frame"] },
-                { word: "proud", correct: "proud", options: ["pride", "prize", "pound", "proud"] },
-                { word: "train", correct: "train", options: ["trend", "tiny", "turn", "train"] }
+                { word: "press", meaning: "กด", correct: "press", options: ["price", "pray", "prince", "press"] },
+                { word: "trip", meaning: "เที่ยว", correct: "trip", options: ["trap", "top", "type", "trip"] },
+                { word: "bring", meaning: "นำมา", correct: "bring", options: ["brain", "rang", "ring", "bring"] },
+                { word: "drop", meaning: "ตก/หล่น", correct: "drop", options: ["drip", "drag", "drove", "drop"] },
+                { word: "free", meaning: "ฟรี/อิสระ", correct: "free", options: ["fly", "frog", "fry", "free"] },
+                { word: "grape", meaning: "องุ่น", correct: "grape", options: ["great", "grip", "grace", "grape"] },
+                { word: "crib", meaning: "เปลเด็ก", correct: "crib", options: ["crop", "crab", "crip", "crib"] },
+                { word: "frame", meaning: "กรอบ", correct: "frame", options: ["firm", "farm", "foam", "frame"] },
+                { word: "proud", meaning: "ภูมิใจ", correct: "proud", options: ["pride", "prize", "pound", "proud"] },
+                { word: "train", meaning: "รถไฟ", correct: "train", options: ["trend", "tiny", "turn", "train"] }
             ]},
             { level: 7, title: "เสียง Sh, Ch, Th", questions: [
-                { word: "ship", correct: "ship", options: ["sip", "chip", "shop", "ship"] },
-                { word: "chair", correct: "chair", options: ["cheer", "care", "share", "chair"] },
-                { word: "thumb", correct: "thumb", options: ["sum", "tub", "pump", "thumb"] },
-                { word: "cash", correct: "cash", options: ["kiss", "crash", "car", "cash"] },
-                { word: "peach", correct: "peach", options: ["pitch", "peak", "push", "peach"] },
-                { word: "think", correct: "think", options: ["sink", "thank", "thin", "think"] },
-                { word: "shop", correct: "shop", options: ["chop", "ship", "short", "shop"] },
-                { word: "lunch", correct: "lunch", options: ["lunge", "latch", "long", "lunch"] },
-                { word: "bath", correct: "bath", options: ["bathe", "both", "path", "bath"] },
-                { word: "wheel", correct: "wheel", options: ["weel", "whale", "will", "wheel"] }
+                { word: "ship", meaning: "เรือ", correct: "ship", options: ["sip", "chip", "shop", "ship"] },
+                { word: "chair", meaning: "เก้าอี้", correct: "chair", options: ["cheer", "care", "share", "chair"] },
+                { word: "thumb", meaning: "นิ้วโป้ง", correct: "thumb", options: ["sum", "tub", "pump", "thumb"] },
+                { word: "cash", meaning: "เงินสด", correct: "cash", options: ["kiss", "crash", "car", "cash"] },
+                { word: "peach", meaning: "ลูกพีช", correct: "peach", options: ["pitch", "peak", "push", "peach"] },
+                { word: "think", meaning: "คิด", correct: "think", options: ["sink", "thank", "thin", "think"] },
+                { word: "shop", meaning: "ร้านค้า", correct: "shop", options: ["chop", "ship", "short", "shop"] },
+                { word: "lunch", meaning: "อาหารเที่ยง", correct: "lunch", options: ["lunge", "latch", "long", "lunch"] },
+                { word: "bath", meaning: "อาบน้ำ", correct: "bath", options: ["bathe", "both", "path", "bath"] },
+                { word: "wheel", meaning: "ล้อ", correct: "wheel", options: ["weel", "whale", "will", "wheel"] }
             ]},
             { level: 8, title: "สระยาว A", questions: [
-                { word: "make", correct: "make", options: ["mack", "mike", "moke", "make"] },
-                { word: "rain", correct: "rain", options: ["ran", "rent", "reign", "rain"] },
-                { word: "day", correct: "day", options: ["die", "dot", "due", "day"] },
-                { word: "game", correct: "game", options: ["gem", "gome", "gum", "game"] },
-                { word: "play", correct: "play", options: ["plea", "ploy", "pull", "play"] },
-                { word: "tail", correct: "tail", options: ["tell", "tool", "tile", "tail"] },
-                { word: "cake", correct: "cake", options: ["cook", "kick", "kake", "cake"] },
-                { word: "bay", correct: "bay", options: ["bye", "bobby", "bee", "bay"] },
-                { word: "snail", correct: "snail", options: ["snell", "snarl", "smile", "snail"] },
-                { word: "plane", correct: "plane", options: ["plan", "plum", "plain", "plane"] }
+                { word: "make", meaning: "ทำ", correct: "make", options: ["mack", "mike", "moke", "make"] },
+                { word: "rain", meaning: "ฝน", correct: "rain", options: ["ran", "rent", "reign", "rain"] },
+                { word: "day", meaning: "วัน", correct: "day", options: ["die", "dot", "due", "day"] },
+                { word: "game", meaning: "เกม", correct: "game", options: ["gem", "gome", "gum", "game"] },
+                { word: "play", meaning: "เล่น", correct: "play", options: ["plea", "ploy", "pull", "play"] },
+                { word: "tail", meaning: "หาง", correct: "tail", options: ["tell", "tool", "tile", "tail"] },
+                { word: "cake", meaning: "เค้ก", correct: "cake", options: ["cook", "kick", "kake", "cake"] },
+                { word: "bay", meaning: "อ่าว", correct: "bay", options: ["bye", "bobby", "bee", "bay"] },
+                { word: "snail", meaning: "หอยทาก", correct: "snail", options: ["snell", "snarl", "smile", "snail"] },
+                { word: "plane", meaning: "เครื่องบิน", correct: "plane", options: ["plan", "plum", "plain", "plane"] }
             ]},
             { level: 9, title: "สระยาว E", questions: [
-                { word: "see", correct: "see", options: ["sea", "say", "so", "see"] },
-                { word: "meet", correct: "meet", options: ["mate", "might", "meat", "meet"] },
-                { word: "leaf", correct: "leaf", options: ["life", "lief", "loff", "leaf"] },
-                { word: "green", correct: "green", options: ["grin", "grain", "great", "green"] },
-                { word: "feet", correct: "feet", options: ["fit", "fat", "fought", "feet"] },
-                { word: "team", correct: "team", options: ["time", "tame", "tome", "team"] },
-                { word: "sleep", correct: "sleep", options: ["slip", "slope", "slap", "sleep"] },
-                { word: "bee", correct: "bee", options: ["buy", "bay", "bale", "bee"] },
-                { word: "tree", correct: "tree", options: ["try", "tray", "tire", "tree"] },
-                { word: "read", correct: "read", options: ["rid", "rod", "road", "read"] }
+                { word: "see", meaning: "เห็น", correct: "see", options: ["sea", "say", "so", "see"] },
+                { word: "meet", meaning: "พบ", correct: "meet", options: ["mate", "might", "meat", "meet"] },
+                { word: "leaf", meaning: "ใบไม้", correct: "leaf", options: ["life", "lief", "loff", "leaf"] },
+                { word: "green", meaning: "สีเขียว", correct: "green", options: ["grin", "grain", "great", "green"] },
+                { word: "feet", meaning: "เท้า(หลายข้าง)", correct: "feet", options: ["fit", "fat", "fought", "feet"] },
+                { word: "team", meaning: "ทีม", correct: "team", options: ["time", "tame", "tome", "team"] },
+                { word: "sleep", meaning: "นอน", correct: "sleep", options: ["slip", "slope", "slap", "sleep"] },
+                { word: "bee", meaning: "ผึ้ง", correct: "bee", options: ["buy", "bay", "bale", "bee"] },
+                { word: "tree", meaning: "ต้นไม้", correct: "tree", options: ["try", "tray", "tire", "tree"] },
+                { word: "read", meaning: "อ่าน", correct: "read", options: ["rid", "rod", "road", "read"] }
             ]},
             { level: 10, title: "สระยาว I", questions: [
-                { word: "bike", correct: "bike", options: ["back", "beck", "book", "bike"] },
-                { word: "fly", correct: "fly", options: ["flea", "flow", "full", "fly"] },
-                { word: "time", correct: "time", options: ["tame", "team", "tome", "time"] },
-                { word: "pie", correct: "pie", options: ["pee", "pay", "poy", "pie"] },
-                { word: "light", correct: "light", options: ["let", "late", "lout", "light"] },
-                { word: "cry", correct: "cry", options: ["crow", "cray", "crew", "cry"] },
-                { word: "five", correct: "five", options: ["fife", "for", "fine", "five"] },
-                { word: "side", correct: "side", options: ["said", "sad", "sod", "side"] },
-                { word: "sky", correct: "sky", options: ["ski", "skay", "sock", "sky"] },
-                { word: "high", correct: "high", options: ["hi", "hoe", "hay", "high"] }
+                { word: "bike", meaning: "จักรยาน", correct: "bike", options: ["back", "beck", "book", "bike"] },
+                { word: "fly", meaning: "บิน/แมลงวัน", correct: "fly", options: ["flea", "flow", "full", "fly"] },
+                { word: "time", meaning: "เวลา", correct: "time", options: ["tame", "team", "tome", "time"] },
+                { word: "pie", meaning: "พาย", correct: "pie", options: ["pee", "pay", "poy", "pie"] },
+                { word: "light", meaning: "แสง/เบา", correct: "light", options: ["let", "late", "lout", "light"] },
+                { word: "cry", meaning: "ร้องไห้", correct: "cry", options: ["crow", "cray", "crew", "cry"] },
+                { word: "five", meaning: "ห้า", correct: "five", options: ["fife", "for", "fine", "five"] },
+                { word: "side", meaning: "ด้านข้าง", correct: "side", options: ["said", "sad", "sod", "side"] },
+                { word: "sky", meaning: "ท้องฟ้า", correct: "sky", options: ["ski", "skay", "sock", "sky"] },
+                { word: "high", meaning: "สูง", correct: "high", options: ["hi", "hoe", "hay", "high"] }
             ]},
             { level: 11, title: "สระยาว O", questions: [
-                { word: "nose", correct: "nose", options: ["noose", "noise", "noss", "nose"] },
-                { word: "coat", correct: "coat", options: ["cut", "cot", "kit", "coat"] },
-                { word: "snow", correct: "snow", options: ["snip", "snob", "sneeze", "snow"] },
-                { word: "boat", correct: "boat", options: ["boot", "bought", "bite", "boat"] },
-                { word: "home", correct: "home", options: ["hum", "ham", "hume", "home"] },
-                { word: "road", correct: "road", options: ["red", "ride", "rod", "road"] },
-                { word: "toe", correct: "toe", options: ["too", "two", "toy", "toe"] },
-                { word: "slow", correct: "slow", options: ["slaw", "slot", "slept", "slow"] },
-                { word: "note", correct: "note", options: ["nut", "net", "not", "note"] },
-                { word: "grow", correct: "grow", options: ["gray", "grip", "gear", "grow"] }
+                { word: "nose", meaning: "จมูก", correct: "nose", options: ["noose", "noise", "noss", "nose"] },
+                { word: "coat", meaning: "เสื้อคลุม", correct: "coat", options: ["cut", "cot", "kit", "coat"] },
+                { word: "snow", meaning: "หิมะ", correct: "snow", options: ["snip", "snob", "sneeze", "snow"] },
+                { word: "boat", meaning: "เรือ", correct: "boat", options: ["boot", "bought", "bite", "boat"] },
+                { word: "home", meaning: "บ้าน", correct: "home", options: ["hum", "ham", "hume", "home"] },
+                { word: "road", meaning: "ถนน", correct: "road", options: ["red", "ride", "rod", "road"] },
+                { word: "toe", meaning: "นิ้วเท้า", correct: "toe", options: ["too", "two", "toy", "toe"] },
+                { word: "slow", meaning: "ช้า", correct: "slow", options: ["slaw", "slot", "slept", "slow"] },
+                { word: "note", meaning: "โน้ต", correct: "note", options: ["nut", "net", "not", "note"] },
+                { word: "grow", meaning: "เติบโต", correct: "grow", options: ["gray", "grip", "gear", "grow"] }
             ]},
             { level: 12, title: "สระยาว U", questions: [
-                { word: "flute", correct: "flute", options: ["float", "foot", "flat", "flute"] },
-                { word: "glue", correct: "glue", options: ["glow", "glew", "glad", "glue"] },
-                { word: "moon", correct: "moon", options: ["moan", "man", "mine", "moon"] },
-                { word: "blue", correct: "blue", options: ["blow", "blew", "bell", "blue"] },
-                { word: "cube", correct: "cube", options: ["cub", "cab", "cop", "cube"] },
-                { word: "tool", correct: "tool", options: ["tall", "tale", "toll", "tool"] },
-                { word: "food", correct: "food", options: ["fed", "foot", "fade", "food"] },
-                { word: "suit", correct: "suit", options: ["set", "sat", "site", "suit"] },
-                { word: "mule", correct: "mule", options: ["male", "mile", "moll", "mule"] },
-                { word: "pool", correct: "pool", options: ["pole", "pull", "pill", "pool"] }
+                { word: "flute", meaning: "ขลุ่ย", correct: "flute", options: ["float", "foot", "flat", "flute"] },
+                { word: "glue", meaning: "กาว", correct: "glue", options: ["glow", "glew", "glad", "glue"] },
+                { word: "moon", meaning: "ดวงจันทร์", correct: "moon", options: ["moan", "man", "mine", "moon"] },
+                { word: "blue", meaning: "สีฟ้า", correct: "blue", options: ["blow", "blew", "bell", "blue"] },
+                { word: "cube", meaning: "ลูกบาศก์", correct: "cube", options: ["cub", "cab", "cop", "cube"] },
+                { word: "tool", meaning: "เครื่องมือ", correct: "tool", options: ["tall", "tale", "toll", "tool"] },
+                { word: "food", meaning: "อาหาร", correct: "food", options: ["fed", "foot", "fade", "food"] },
+                { word: "suit", meaning: "สูท", correct: "suit", options: ["set", "sat", "site", "suit"] },
+                { word: "mule", meaning: "ลา", correct: "mule", options: ["male", "mile", "moll", "mule"] },
+                { word: "pool", meaning: "สระน้ำ", correct: "pool", options: ["pole", "pull", "pill", "pool"] }
             ]},
             { level: 13, title: "สระ + R", questions: [
-                { word: "car", correct: "car", options: ["care", "core", "cur", "car"] },
-                { word: "form", correct: "form", options: ["firm", "farm", "foam", "form"] },
-                { word: "girl", correct: "girl", options: ["gale", "gore", "gull", "girl"] },
-                { word: "her", correct: "her", options: ["hair", "hear", "hire", "her"] },
-                { word: "star", correct: "star", options: ["stair", "store", "stir", "star"] },
-                { word: "corn", correct: "corn", options: ["coin", "curb", "core", "corn"] },
-                { word: "bird", correct: "bird", options: ["beard", "bore", "bred", "bird"] },
-                { word: "turn", correct: "turn", options: ["tone", "tin", "torn", "turn"] },
-                { word: "park", correct: "park", options: ["perk", "pork", "pike", "park"] },
-                { word: "short", correct: "short", options: ["shirt", "shut", "sort", "short"] }
+                { word: "car", meaning: "รถยนต์", correct: "car", options: ["care", "core", "cur", "car"] },
+                { word: "form", meaning: "รูปแบบ", correct: "form", options: ["firm", "farm", "foam", "form"] },
+                { word: "girl", meaning: "เด็กผู้หญิง", correct: "girl", options: ["gale", "gore", "gull", "girl"] },
+                { word: "her", meaning: "ของเธอ", correct: "her", options: ["hair", "hear", "hire", "her"] },
+                { word: "star", meaning: "ดาว", correct: "star", options: ["stair", "store", "stir", "star"] },
+                { word: "corn", meaning: "ข้าวโพด", correct: "corn", options: ["coin", "curb", "core", "corn"] },
+                { word: "bird", meaning: "นก", correct: "bird", options: ["beard", "bore", "bred", "bird"] },
+                { word: "turn", meaning: "หมุน/เลี้ยว", correct: "turn", options: ["tone", "tin", "torn", "turn"] },
+                { word: "park", meaning: "สวนสาธารณะ", correct: "park", options: ["perk", "pork", "pike", "park"] },
+                { word: "short", meaning: "สั้น/เตี้ย", correct: "short", options: ["shirt", "shut", "sort", "short"] }
             ]},
             { level: 14, title: "2 พยางค์ (นาม)", questions: [
-                { word: "pencil", correct: "pencil", options: ["pen", "pimple", "pestle", "pencil"] },
-                { word: "table", correct: "table", options: ["tailor", "stable", "label", "table"] },
-                { word: "tiger", correct: "tiger", options: ["tire", "tighter", "tie", "tiger"] },
-                { word: "flower", correct: "flower", options: ["flour", "flow", "foul", "flower"] },
-                { word: "cookie", correct: "cookie", options: ["cuckoo", "cooky", "coke", "cookie"] },
-                { word: "rocket", correct: "rocket", options: ["rock", "rabbit", "racket", "rocket"] },
-                { word: "basket", correct: "basket", options: ["best", "bask", "biscuit", "basket"] },
-                { word: "window", correct: "window", options: ["wine", "wind", "winter", "window"] },
-                { word: "doctor", correct: "doctor", options: ["duck", "direct", "dot", "doctor"] },
-                { word: "magnet", correct: "magnet", options: ["mag", "main", "money", "magnet"] }
+                { word: "pencil", meaning: "ดินสอ", correct: "pencil", options: ["pen", "pimple", "pestle", "pencil"] },
+                { word: "table", meaning: "โต๊ะ", correct: "table", options: ["tailor", "stable", "label", "table"] },
+                { word: "tiger", meaning: "เสือ", correct: "tiger", options: ["tire", "tighter", "tie", "tiger"] },
+                { word: "flower", meaning: "ดอกไม้", correct: "flower", options: ["flour", "flow", "foul", "flower"] },
+                { word: "cookie", meaning: "คุกกี้", correct: "cookie", options: ["cuckoo", "cooky", "coke", "cookie"] },
+                { word: "rocket", meaning: "จรวด", correct: "rocket", options: ["rock", "rabbit", "racket", "rocket"] },
+                { word: "basket", meaning: "ตะกร้า", correct: "basket", options: ["best", "bask", "biscuit", "basket"] },
+                { word: "window", meaning: "หน้าต่าง", correct: "window", options: ["wine", "wind", "winter", "window"] },
+                { word: "doctor", meaning: "หมอ", correct: "doctor", options: ["duck", "direct", "dot", "doctor"] },
+                { word: "magnet", meaning: "แม่เหล็ก", correct: "magnet", options: ["mag", "main", "money", "magnet"] }
             ]},
             { level: 15, title: "2 พยางค์ (กริยา)", questions: [
-                { word: "finish", correct: "finish", options: ["fist", "funnel", "fine", "finish"] },
-                { word: "listen", correct: "listen", options: ["lessen", "lisp", "lesson", "listen"] },
-                { word: "forget", correct: "forget", options: ["forgive", "forgo", "figure", "forget"] },
-                { word: "hungry", correct: "hungry", options: ["anger", "hunker", "hairy", "hungry"] },
-                { word: "before", correct: "before", options: ["for", "four", "bore", "before"] },
-                { word: "happy", correct: "happy", options: ["hoppy", "hip", "help", "happy"] },
-                { word: "ready", correct: "ready", options: ["read", "ruddy", "ray", "ready"] },
-                { word: "today", correct: "today", options: ["tonight", "toad", "two", "today"] },
-                { word: "open", correct: "open", options: ["hope", "oats", "often", "open"] },
-                { word: "answer", correct: "answer", options: ["ant", "enter", "and", "answer"] }
+                { word: "finish", meaning: "เสร็จ", correct: "finish", options: ["fist", "funnel", "fine", "finish"] },
+                { word: "listen", meaning: "ฟัง", correct: "listen", options: ["lessen", "lisp", "lesson", "listen"] },
+                { word: "forget", meaning: "ลืม", correct: "forget", options: ["forgive", "forgo", "figure", "forget"] },
+                { word: "hungry", meaning: "หิว", correct: "hungry", options: ["anger", "hunker", "hairy", "hungry"] },
+                { word: "before", meaning: "ก่อน", correct: "before", options: ["for", "four", "bore", "before"] },
+                { word: "happy", meaning: "มีความสุข", correct: "happy", options: ["hoppy", "hip", "help", "happy"] },
+                { word: "ready", meaning: "พร้อม", correct: "ready", options: ["read", "ruddy", "ray", "ready"] },
+                { word: "today", meaning: "วันนี้", correct: "today", options: ["tonight", "toad", "two", "today"] },
+                { word: "open", meaning: "เปิด", correct: "open", options: ["hope", "oats", "often", "open"] },
+                { word: "answer", meaning: "คำตอบ", correct: "answer", options: ["ant", "enter", "and", "answer"] }
             ]},
             { level: 16, title: "3 พยางค์ (ง่าย)", questions: [
-                { word: "banana", correct: "banana", options: ["manana", "bandana", "bonanza", "banana"] },
-                { word: "family", correct: "family", options: ["famine", "farm", "firmly", "family"] },
-                { word: "company", correct: "company", options: ["comet", "come", "comply", "company"] },
-                { word: "camera", correct: "camera", options: ["camper", "car", "karma", "camera"] },
-                { word: "holiday", correct: "holiday", options: ["hole", "holy", "hallway", "holiday"] },
-                { word: "america", correct: "america", options: ["amuse", "merry", "murmur", "america"] },
-                { word: "animal", correct: "animal", options: ["annoy", "annual", "ally", "animal"] },
-                { word: "bicycle", correct: "bicycle", options: ["bike", "by", "cycle", "bicycle"] },
-                { word: "pirate", correct: "pirate", options: ["parade", "private", "prior", "pirate"] },
-                { word: "umbrella", correct: "umbrella", options: ["humble", "number", "unreal", "umbrella"] }
+                { word: "banana", meaning: "กล้วย", correct: "banana", options: ["manana", "bandana", "bonanza", "banana"] },
+                { word: "family", meaning: "ครอบครัว", correct: "family", options: ["famine", "farm", "firmly", "family"] },
+                { word: "company", meaning: "บริษัท", correct: "company", options: ["comet", "come", "comply", "company"] },
+                { word: "camera", meaning: "กล้อง", correct: "camera", options: ["camper", "car", "karma", "camera"] },
+                { word: "holiday", meaning: "วันหยุด", correct: "holiday", options: ["hole", "holy", "hallway", "holiday"] },
+                { word: "america", meaning: "อเมริกา", correct: "america", options: ["amuse", "merry", "murmur", "america"] },
+                { word: "animal", meaning: "สัตว์", correct: "animal", options: ["annoy", "annual", "ally", "animal"] },
+                { word: "bicycle", meaning: "จักรยาน", correct: "bicycle", options: ["bike", "by", "cycle", "bicycle"] },
+                { word: "pirate", meaning: "โจรสลัด", correct: "pirate", options: ["parade", "private", "prior", "pirate"] },
+                { word: "umbrella", meaning: "ร่ม", correct: "umbrella", options: ["humble", "number", "unreal", "umbrella"] }
             ]},
             { level: 17, title: "3 พยางค์ (กลาง)", questions: [
-                { word: "difficult", correct: "difficult", options: ["dig", "digging", "daddy", "difficult"] },
-                { word: "tomorrow", correct: "tomorrow", options: ["toma", "tummy", "tomb", "tomorrow"] },
-                { word: "elephant", correct: "elephant", options: ["elegant", "aloe", "elphant", "elephant"] },
-                { word: "yesterday", correct: "yesterday", options: ["yes", "yester", "day", "yesterday"] },
-                { word: "continue", correct: "continue", options: ["content", "control", "count", "continue"] },
-                { word: "together", correct: "together", options: ["tougher", "toga", "tender", "together"] },
-                { word: "accident", correct: "accident", options: ["axe", "action", "access", "accident"] },
-                { word: "decorate", correct: "decorate", options: ["deck", "direct", "dot", "decorate"] },
-                { word: "delivery", correct: "delivery", options: ["deliver", "delay", "deal", "delivery"] },
-                { word: "customer", correct: "customer", options: ["custom", "cast", "cost", "customer"] }
+                { word: "difficult", meaning: "ยาก", correct: "difficult", options: ["dig", "digging", "daddy", "difficult"] },
+                { word: "tomorrow", meaning: "พรุ่งนี้", correct: "tomorrow", options: ["toma", "tummy", "tomb", "tomorrow"] },
+                { word: "elephant", meaning: "ช้าง", correct: "elephant", options: ["elegant", "aloe", "elphant", "elephant"] },
+                { word: "yesterday", meaning: "เมื่อวาน", correct: "yesterday", options: ["yes", "yester", "day", "yesterday"] },
+                { word: "continue", meaning: "ทำต่อ", correct: "continue", options: ["content", "control", "count", "continue"] },
+                { word: "together", meaning: "ด้วยกัน", correct: "together", options: ["tougher", "toga", "tender", "together"] },
+                { word: "accident", meaning: "อุบัติเหตุ", correct: "accident", options: ["axe", "action", "access", "accident"] },
+                { word: "decorate", meaning: "ตกแต่ง", correct: "decorate", options: ["deck", "direct", "dot", "decorate"] },
+                { word: "delivery", meaning: "การส่งของ", correct: "delivery", options: ["deliver", "delay", "deal", "delivery"] },
+                { word: "customer", meaning: "ลูกค้า", correct: "customer", options: ["custom", "cast", "cost", "customer"] }
             ]},
             { level: 18, title: "3 พยางค์ (ยาก)", questions: [
-                { word: "important", correct: "important", options: ["impact", "implant", "impatient", "important"] },
-                { word: "adventure", correct: "adventure", options: ["advance", "advisor", "advent", "adventure"] },
-                { word: "beautiful", correct: "beautiful", options: ["bootiful", "beauty", "butter", "beautiful"] },
-                { word: "introduce", correct: "introduce", options: ["intro", "indoor", "interest", "introduce"] },
-                { word: "remember", correct: "remember", options: ["member", "reborn", "remover", "remember"] },
-                { word: "delicious", correct: "delicious", options: ["delight", "decisive", "delete", "delicious"] },
-                { word: "wonderful", correct: "wonderful", options: ["wonder", "wind", "wave", "wonderful"] },
-                { word: "surprised", correct: "surprised", options: ["sure", "supply", "side", "surprised"] },
-                { word: "exciting", correct: "exciting", options: ["exit", "extra", "exact", "exciting"] },
-                { word: "powerful", correct: "powerful", options: ["power", "paw", "push", "powerful"] }
+                { word: "important", meaning: "สำคัญ", correct: "important", options: ["impact", "implant", "impatient", "important"] },
+                { word: "adventure", meaning: "การผจญภัย", correct: "adventure", options: ["advance", "advisor", "advent", "adventure"] },
+                { word: "beautiful", meaning: "สวยงาม", correct: "beautiful", options: ["bootiful", "beauty", "butter", "beautiful"] },
+                { word: "introduce", meaning: "แนะนำ", correct: "introduce", options: ["intro", "indoor", "interest", "introduce"] },
+                { word: "remember", meaning: "จำได้", correct: "remember", options: ["member", "reborn", "remover", "remember"] },
+                { word: "delicious", meaning: "อร่อย", correct: "delicious", options: ["delight", "decisive", "delete", "delicious"] },
+                { word: "wonderful", meaning: "มหัศจรรย์", correct: "wonderful", options: ["wonder", "wind", "wave", "wonderful"] },
+                { word: "surprised", meaning: "ประหลาดใจ", correct: "surprised", options: ["sure", "supply", "side", "surprised"] },
+                { word: "exciting", meaning: "น่าตื่นเต้น", correct: "exciting", options: ["exit", "extra", "exact", "exciting"] },
+                { word: "powerful", meaning: "ทรงพลัง", correct: "powerful", options: ["power", "paw", "push", "powerful"] }
             ]},
             { level: 19, title: "4 พยางค์ (ง่าย)", questions: [
-                { word: "computer", correct: "computer", options: ["compare", "compete", "commute", "computer"] },
-                { word: "solution", correct: "solution", options: ["solve", "sole", "salute", "solution"] },
-                { word: "apology", correct: "apology", options: ["apply", "apple", "apocalypse", "apology"] },
-                { word: "necessary", correct: "necessary", options: ["nestle", "nerve", "new", "necessary"] },
-                { word: "activity", correct: "activity", options: ["active", "act", "actor", "activity"] },
-                { word: "discovery", correct: "discovery", options: ["disagree", "discuss", "disc", "discovery"] },
-                { word: "geography", correct: "geography", options: ["geo", "graph", "grave", "geography"] },
-                { word: "security", correct: "security", options: ["sure", "secret", "section", "security"] },
-                { word: "celebrity", correct: "celebrity", options: ["sell", "select", "cell", "celebrity"] },
-                { word: "education", correct: "education", options: ["edit", "echo", "eager", "education"] }
+                { word: "computer", meaning: "คอมพิวเตอร์", correct: "computer", options: ["compare", "compete", "commute", "computer"] },
+                { word: "solution", meaning: "ทางออก", correct: "solution", options: ["solve", "sole", "salute", "solution"] },
+                { word: "apology", meaning: "การขอโทษ", correct: "apology", options: ["apply", "apple", "apocalypse", "apology"] },
+                { word: "necessary", meaning: "จำเป็น", correct: "necessary", options: ["nestle", "nerve", "new", "necessary"] },
+                { word: "activity", meaning: "กิจกรรม", correct: "activity", options: ["active", "act", "actor", "activity"] },
+                { word: "discovery", meaning: "การค้นพบ", correct: "discovery", options: ["disagree", "discuss", "disc", "discovery"] },
+                { word: "geography", meaning: "ภูมิศาสตร์", correct: "geography", options: ["geo", "graph", "grave", "geography"] },
+                { word: "security", meaning: "ความปลอดภัย", correct: "security", options: ["sure", "secret", "section", "security"] },
+                { word: "celebrity", meaning: "คนดัง", correct: "celebrity", options: ["sell", "select", "cell", "celebrity"] },
+                { word: "education", meaning: "การศึกษา", correct: "education", options: ["edit", "echo", "eager", "education"] }
             ]},
             { level: 20, title: "4 พยางค์ (ยาก)", questions: [
-                { word: "vocabulary", correct: "vocabulary", options: ["voice", "vocal", "vacation", "vocabulary"] },
-                { word: "experiment", correct: "experiment", options: ["experience", "expert", "express", "experiment"] },
-                { word: "vegetable", correct: "vegetable", options: ["very", "vet", "visit", "vegetable"] },
-                { word: "advisable", correct: "advisable", options: ["advice", "visual", "visa", "advisable"] },
-                { word: "available", correct: "available", options: ["avoid", "avocado", "able", "available"] },
-                { word: "community", correct: "community", options: ["common", "comment", "come", "community"] },
-                { word: "deliciously", correct: "deliciously", options: ["delight", "deliberate", "delete", "deliciously"] },
-                { word: "historical", correct: "historical", options: ["history", "store", "start", "historical"] },
-                { word: "magical", correct: "magical", options: ["major", "magic", "manage", "magical"] },
-                { word: "technology", correct: "technology", options: ["technical", "tek", "tailor", "technology"] }
+                { word: "vocabulary", meaning: "คำศัพท์", correct: "vocabulary", options: ["voice", "vocal", "vacation", "vocabulary"] },
+                { word: "experiment", meaning: "การทดลอง", correct: "experiment", options: ["experience", "expert", "express", "experiment"] },
+                { word: "vegetable", meaning: "ผัก", correct: "vegetable", options: ["very", "vet", "visit", "vegetable"] },
+                { word: "advisable", meaning: "สมควร", correct: "advisable", options: ["advice", "visual", "visa", "advisable"] },
+                { word: "available", meaning: "มีอยู่", correct: "available", options: ["avoid", "avocado", "able", "available"] },
+                { word: "community", meaning: "ชุมชน", correct: "community", options: ["common", "comment", "come", "community"] },
+                { word: "deliciously", meaning: "อย่างอร่อย", correct: "deliciously", options: ["delight", "deliberate", "delete", "deliciously"] },
+                { word: "historical", meaning: "ทางประวัติศาสตร์", correct: "historical", options: ["history", "store", "start", "historical"] },
+                { word: "magical", meaning: "วิเศษ", correct: "magical", options: ["major", "magic", "manage", "magical"] },
+                { word: "technology", meaning: "เทคโนโลยี", correct: "technology", options: ["technical", "tek", "tailor", "technology"] }
             ]}
         ];
 
@@ -582,52 +593,62 @@
         const levelGridEl = document.getElementById('level-grid');
         const levelTitleEl = document.getElementById('level-title');
         const qCountEl = document.getElementById('q-count');
+        
         const audioButton = document.getElementById('audio-button');
-        const feedbackMessageEl = document.getElementById('feedback-message');
+        const feedbackWordEl = document.getElementById('feedback-word');
+        const feedbackThaiEl = document.getElementById('feedback-thai');
         const optionsArea = document.getElementById('options-area');
         const nextBtn = document.getElementById('next-btn');
 
-        // --- TTS SYSTEM (CRITICAL FIX) ---
+        // --- TTS SYSTEM ---
         function initTTS() {
             if (voice) return;
             const voices = synth.getVoices();
-            // เลือกเสียงภาษาอังกฤษที่คุณภาพดีที่สุด
-            // Google US English มักจะออกเสียงคำศัพท์ได้เป็นธรรมชาติที่สุด
+            // เลือกเสียงภาษาอังกฤษ
             voice = voices.find(v => v.name.includes("Google US English")) || 
                     voices.find(v => v.lang === 'en-US') || 
-                    voices.find(v => v.lang.startsWith('en-'));
+                    voices.find(v => v.lang.startsWith('en'));
         }
 
+        // พูดคำโจทย์ (ปกติ)
         function speakWord(text) {
             if (!synth || !text) return;
-            
-            synth.cancel(); // หยุดเสียงเก่าก่อน
-            
-            // *** เคล็ดลับสำคัญ: เพิ่ม "." ต่อท้ายคำเพื่อบังคับให้ระบบอ่านเป็นประโยค/คำ ไม่ใช่สะกดทีละตัว ***
+            synth.cancel(); 
+            // เติมจุดเพื่อให้ไม่อ่านสะกดคำ
             const utterance = new SpeechSynthesisUtterance(text + "."); 
-            
             utterance.lang = 'en-US'; 
-            utterance.rate = 0.9; // ความเร็วปกติค่อนไปทางช้าเพื่อให้ฟังชัด
+            utterance.rate = 0.9; 
             utterance.voice = voice;
             
-            utterance.onstart = () => { isSpeaking = true; audioButton.disabled = true; };
+            utterance.onstart = () => { isSpeaking = true; audioButton.style.transform = 'scale(0.95)'; };
             utterance.onend = () => { 
                 isSpeaking = false; 
-                if (!isAnswered && audioPlayCount < MAX_REPLAY_COUNT) {
-                    audioButton.disabled = false;
-                }
+                audioButton.style.transform = 'scale(1)';
             };
             
             synth.speak(utterance);
         }
 
-        function speakFeedback(text) {
+        // พูดเฉลย (ช้า + เว้นจังหวะ)
+        function speakFeedback(feedbackText, wordToSay) {
             if (!synth) return;
             synth.cancel();
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'en-US';
-            utterance.voice = voice;
-            synth.speak(utterance);
+
+            // ส่วนที่ 1: พูดคำชม (Correct / Incorrect) ช้าๆ
+            const u1 = new SpeechSynthesisUtterance(feedbackText);
+            u1.lang = 'en-US';
+            u1.rate = 0.8; // ช้าลง
+            u1.voice = voice;
+            
+            // ส่วนที่ 2: พูดคำศัพท์
+            const u2 = new SpeechSynthesisUtterance(wordToSay + ".");
+            u2.lang = 'en-US';
+            u2.rate = 0.8;
+            u2.voice = voice;
+
+            synth.speak(u1);
+            // เทคนิคเว้นจังหวะ: TTS จะเล่นคิวถัดไปเอง แต่การแยก Utterance ทำให้มี gap ธรรมชาติ
+            synth.speak(u2);
         }
 
         // --- GAME LOGIC ---
@@ -656,7 +677,7 @@
         function nextQuestion() {
             if (currentQuizIndex >= currentLevelData.questions.length) {
                 alert(`จบด่าน! คะแนนของคุณ: ${score}/10`);
-                location.reload(); // รีโหลดเพื่อง่ายต่อการเริ่มใหม่
+                location.reload(); 
                 return;
             }
 
@@ -665,11 +686,10 @@
             
             // Reset UI
             nextBtn.disabled = true;
-            nextBtn.style.opacity = "0.5";
-            feedbackMessageEl.textContent = "แตะลำโพงเพื่อฟังเสียง";
-            feedbackMessageEl.style.color = "#888";
-            audioButton.disabled = false;
-
+            feedbackWordEl.textContent = "";
+            feedbackThaiEl.textContent = "แตะลำโพงเพื่อฟังเสียง";
+            feedbackThaiEl.style.color = "var(--text-gray)";
+            
             updateStatusBar();
             setupQuestion();
         }
@@ -692,12 +712,12 @@
             shuffledOptions.forEach(opt => {
                 const btn = document.createElement('button');
                 btn.className = 'option-btn';
-                btn.innerHTML = `<span class="item-word">${opt.word.toUpperCase()}</span>`; // แสดงเป็นตัวใหญ่
+                btn.innerHTML = `<span class="item-word">${opt.word.toUpperCase()}</span>`; 
                 btn.onclick = (e) => handleAnswer(e, opt.isCorrect);
                 optionsArea.appendChild(btn);
             });
 
-            // Auto Play (ส่งตัวเล็ก + จุด)
+            // Auto Play
             setTimeout(() => {
                 speakWord(currentWord.word.toLowerCase());
                 audioPlayCount = 1;
@@ -709,21 +729,24 @@
             isAnswered = true;
 
             const btn = e.currentTarget;
-            audioButton.disabled = true;
+            
+            // แสดงเฉลย ภาษาอังกฤษ / ไทย
+            feedbackWordEl.textContent = currentWord.word.toUpperCase();
+            feedbackThaiEl.textContent = currentWord.meaning;
 
             if (isCorrect) {
                 score++;
                 btn.classList.add('correct');
-                feedbackMessageEl.textContent = "ถูกต้อง! Excellent!";
-                feedbackMessageEl.style.color = "var(--correct-shadow)";
-                speakFeedback("Correct!");
+                feedbackThaiEl.style.color = "var(--correct-shadow)";
+                // พูด Correct ... Word
+                speakFeedback("Correct!", currentWord.word.toLowerCase());
             } else {
                 btn.classList.add('incorrect');
-                feedbackMessageEl.textContent = `ผิด! คำตอบคือ ${currentWord.correct.toUpperCase()}`;
-                feedbackMessageEl.style.color = "var(--wrong-shadow)";
-                speakFeedback("Incorrect. The answer is " + currentWord.word);
+                feedbackThaiEl.style.color = "var(--wrong-shadow)";
+                // พูด Incorrect ... Word
+                speakFeedback("Incorrect!", currentWord.word.toLowerCase());
                 
-                // เฉลยตัวที่ถูก
+                // เฉลยปุ่มที่ถูก
                 document.querySelectorAll('.option-btn').forEach(b => {
                     if (b.textContent.toLowerCase() === currentWord.correct.toLowerCase()) {
                         b.classList.add('correct');
@@ -731,20 +754,13 @@
                 });
             }
 
-            // Enable Next Button
             nextBtn.disabled = false;
-            nextBtn.style.opacity = "1";
         }
 
         // --- EVENT LISTENERS ---
         audioButton.onclick = () => {
-            if (audioPlayCount < MAX_REPLAY_COUNT && !isSpeaking) {
+            if (!isSpeaking) {
                 speakWord(currentWord.word.toLowerCase());
-                audioPlayCount++;
-                
-                let remaining = MAX_REPLAY_COUNT - audioPlayCount;
-                if(remaining > 0) feedbackMessageEl.textContent = `ฟังได้อีก ${remaining} ครั้ง`;
-                else feedbackMessageEl.textContent = "ครั้งสุดท้าย!";
             }
         };
 
@@ -757,11 +773,9 @@
         window.addEventListener('DOMContentLoaded', () => {
             createLevelButtons();
             
-            // รอโหลดเสียง
             if (synth.onvoiceschanged !== undefined) {
                 synth.onvoiceschanged = initTTS;
             }
-            // เรียกเผื่อไว้
             setTimeout(initTTS, 500);
         });
 
