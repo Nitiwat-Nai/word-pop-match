@@ -3,631 +3,768 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Word Icons Match 🚀</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Prompt:wght@300;500;700&display=swap" rel="stylesheet">
+    <title>Word Pop Match</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;800&family=Fredoka:wght@500;700&display=swap" rel="stylesheet">
+
     <style>
+        /* --- MODERN & PLAYFUL THEME --- */
         :root {
-            /* Theme Colors */
-            --bg-menu: #FFF9C4; /* Yellow for Menu */
-            --primary: #6C5CE7;
-            --secondary: #A29BFE;
-            --accent: #FD79A8;
-            --success: #00B894;
-            --error: #FF7675;
-            --text-dark: #2D3436;
-            --text-light: #DFE6E9;
+            /* สีหลักแบบพาสเทลสดใส */
+            --bg-gradient: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 100%);
+            --card-bg: rgba(255, 255, 255, 0.92); /* พื้นหลังกึ่งโปร่งแสง */
             
-            /* Dimensions */
-            --card-gap: 8px;
-            --radius-xl: 24px;
-            --radius-md: 12px;
+            --primary-color: #FF6B6B; /* สีหลัก (แดงอมชมพู) */
+            --primary-shadow: #D64545;
+            
+            --secondary-color: #4ECDC4; /* สีรอง (เขียวมิ้นต์) */
+            --secondary-shadow: #369B93;
+
+            --correct-color: #88D8B0; /* เขียวพาสเทล */
+            --correct-shadow: #5FB38D;
+            
+            --wrong-color: #FF8A80; /* แดงพาสเทล */
+            --wrong-shadow: #D15F55;
+
+            --text-main: #4A4A4A;
+            --text-light: #FFFFFF;
+            
+            --border-radius: 20px;
         }
 
+        /* รีเซ็ตค่า */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
-            font-family: 'Prompt', 'Fredoka', sans-serif;
-            background-color: var(--bg-menu);
+            font-family: 'Sarabun', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-main);
             margin: 0;
-            padding: 0;
+            padding: 15px; /* เพิ่มพื้นที่ขอบในมือถือ */
             display: flex;
             justify-content: center;
+            align-items: center; 
             min-height: 100vh;
-            transition: background-color 0.6s ease;
-            overflow-x: hidden;
+            text-align: center;
         }
 
-        /* Mobile Container mimics an App View */
-        .app-container {
+        /* คอนเทนเนอร์หลัก (Card Style) */
+        .container {
             width: 100%;
-            max-width: 450px;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            min-height: 100vh;
+            max-width: 480px; /* ขนาดเหมาะกับมือถือ */
+            background-color: var(--card-bg);
+            backdrop-filter: blur(10px); /* เอฟเฟกต์กระจก */
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            min-height: 85vh;
+            max-height: 95vh;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 0 40px rgba(0,0,0,0.1);
-            position: relative;
+            overflow: hidden; /* ป้องกันการเลื่อนหลุดกรอบ */
+            border: 2px solid #FFFFFF;
         }
 
-        /* --- HEADER --- */
+        /* Header */
         header {
-            padding: 1.2rem 1rem;
-            text-align: center;
-            background: white;
-            border-bottom-left-radius: 30px;
-            border-bottom-right-radius: 30px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-            z-index: 100;
-            position: relative;
+            background: transparent;
+            padding: 1rem;
+            border-bottom: 2px dashed rgba(0,0,0,0.05);
         }
         header h1 {
+            font-family: 'Fredoka', sans-serif; /* ฟอนต์น่ารักสำหรับชื่อเกม */
+            font-size: 2rem;
             margin: 0;
-            font-family: 'Fredoka', sans-serif;
-            font-size: 1.8rem;
-            color: var(--primary);
-            letter-spacing: 1px;
+            color: var(--primary-color);
             text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+            letter-spacing: 1px;
         }
 
-        /* --- SCREENS --- */
+        /* Screen Management */
         .screen {
-            flex: 1;
-            display: none;
-            flex-direction: column;
             padding: 1rem;
-            opacity: 0;
-            transform: translateY(10px);
-            transition: opacity 0.3s ease, transform 0.3s ease;
+            display: none; 
+            flex-grow: 1;
+            flex-direction: column;
+            overflow-y: auto; /* ให้เลื่อนได้ถ้าเนื้อหาล้น */
         }
         .screen.active {
             display: flex;
-            opacity: 1;
-            transform: translateY(0);
         }
 
-        h2 { text-align: center; color: var(--text-dark); margin: 0.5rem 0; font-weight: 700; }
-        p.subtitle { text-align: center; color: #636e72; margin-top: 0; font-size: 0.9rem; }
-
-        /* --- LEVEL SELECT GRID --- */
-        .level-grid {
+        /* --- Level Selection (Grid) --- */
+        #level-select-screen .level-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            padding: 10px 5px;
-            overflow-y: auto;
+            grid-template-columns: repeat(4, 1fr); /* 4 คอลัมน์ในมือถือ */
+            gap: 10px;
+            padding: 10px 0;
         }
-
-        /* --- GAME GRID --- */
-        .game-board {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: var(--card-gap);
-            width: 100%;
-            margin: 0 auto;
-            align-content: start;
-            padding-bottom: 20px;
-        }
-
-        /* --- CARD DESIGN (3D Style) --- */
-        .card {
-            aspect-ratio: 1 / 1;
-            position: relative;
+        
+        .level-btn {
+            background-color: #FFFFFF;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            border-radius: 12px;
+            aspect-ratio: 1/1; /* ปุ่มจัตุรัส */
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.2rem;
+            font-weight: bold;
             cursor: pointer;
-            perspective: 1000px;
-            user-select: none;
-        }
-
-        .card-inner {
-            width: 100%;
-            height: 100%;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            transform-style: preserve-3d;
-            border-radius: var(--radius-md);
-            position: relative;
-            box-shadow: 0 4px 0 rgba(0,0,0,0.1); /* 3D Depth Shadow */
-        }
-
-        .card.flipped .card-inner { transform: rotateY(180deg); }
-        .card.matched .card-inner { transform: rotateY(180deg) scale(0.95); opacity: 0.6; box-shadow: none; }
-
-        .card-face {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: var(--radius-md);
-            font-weight: 600;
-            overflow: hidden;
-            border: 2px solid white;
-        }
-
-        .card-back {
-            background: var(--card-theme, linear-gradient(135deg, #74b9ff, #0984e3));
-            color: rgba(255,255,255,0.8);
-            font-size: 1.5rem;
-        }
-        .card-back::after { content: "?"; font-family: 'Fredoka'; }
-
-        .card-front {
-            background: white;
-            color: var(--text-dark);
-            transform: rotateY(180deg);
-            padding: 2px;
-            text-align: center;
-        }
-
-        .txt-content { font-family: 'Fredoka'; font-size: clamp(0.7rem, 2.5vw, 0.95rem); line-height: 1.1; word-break: break-word; }
-        .icon-content { font-size: clamp(1.8rem, 5vw, 2.5rem); }
-
-        /* --- BUTTONS (Neumorphic / 3D) --- */
-        .btn {
-            border: none;
-            padding: 14px;
-            border-radius: var(--radius-xl);
-            font-family: 'Prompt', sans-serif;
-            font-weight: 600;
-            font-size: 1rem;
-            color: white;
-            cursor: pointer;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-bottom: 10px;
+            box-shadow: 0 4px 0 var(--primary-shadow);
             transition: transform 0.1s, box-shadow 0.1s;
-            position: relative;
-            box-shadow: 0 4px 0 rgba(0,0,0,0.15); /* 3D Effect */
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        .btn:active {
+        .level-btn:active {
             transform: translateY(4px);
-            box-shadow: 0 0 0 rgba(0,0,0,0);
+            box-shadow: 0 0 0 var(--primary-shadow);
         }
 
-        /* Button Themes */
-        .btn-lvl { flex-direction: column; height: 80px; gap: 4px; font-size: 1.1rem; }
-        .btn-lvl span { font-size: 0.75rem; opacity: 0.9; font-weight: 400; }
-        
-        .theme-blue { background: #74b9ff; box-shadow: 0 4px 0 #0984e3; }
-        .theme-violet { background: #a29bfe; box-shadow: 0 4px 0 #6c5ce7; }
-        .theme-orange { background: #fab1a0; box-shadow: 0 4px 0 #e17055; }
-        .theme-teal { background: #81ecec; box-shadow: 0 4px 0 #00cec9; color: #2d3436; }
-        .theme-red { background: #ff7675; box-shadow: 0 4px 0 #d63031; }
-        
-        .btn-play { background: #00b894; box-shadow: 0 4px 0 #00896c; }
-        .btn-home { background: #dfe6e9; color: var(--text-dark); box-shadow: 0 4px 0 #b2bec3; }
-        .btn-next { background: #0984e3; box-shadow: 0 4px 0 #0652dd; }
+        /* --- Game Screen Layout --- */
+        #game-screen {
+            justify-content: space-between; /* กระจายเนื้อหา */
+            padding-bottom: 0; /* พื้นที่สำหรับปุ่ม Footer */
+        }
 
-        /* --- STATUS BAR --- */
         .status-bar {
-            display: flex; justify-content: space-between;
-            background: white; padding: 12px 20px;
-            border-radius: 20px; margin-bottom: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            background: rgba(255,255,255,0.5);
+            padding: 8px 15px;
+            border-radius: 30px;
         }
-        .stat { text-align: center; }
-        .stat-label { display: block; font-size: 0.7rem; color: #b2bec3; }
-        .stat-val { font-family: 'Fredoka'; font-size: 1.1rem; color: var(--text-dark); }
+        #score { color: var(--primary-color); }
 
-        /* --- SUMMARY LIST --- */
-        #summary-list {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
-            padding-bottom: 15px; overflow-y: auto; max-height: 55vh;
+        /* Speaker Button (Hero Section) */
+        #prompt-area {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1rem;
         }
-        .vocab-card {
-            background: white; padding: 10px; border-radius: 12px;
-            display: flex; align-items: center; gap: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        #audio-button {
+            background-color: var(--secondary-color); 
+            border: none;
+            border-radius: 50%;
+            width: 110px; 
+            height: 110px; 
+            font-size: 3.5rem; 
+            cursor: pointer;
+            box-shadow: 0 8px 0 var(--secondary-shadow); 
+            transition: all 0.1s ease;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        .v-icon { font-size: 1.5rem; }
-        .v-text { display: flex; flex-direction: column; }
-        .v-en { font-family: 'Fredoka'; font-weight: 600; color: var(--primary); }
-        .v-th { font-size: 0.8rem; color: #636e72; }
+        #audio-button:active {
+            transform: translateY(6px);
+            box-shadow: 0 2px 0 var(--secondary-shadow);
+        }
+        #audio-button:disabled {
+            filter: grayscale(0.8);
+            opacity: 0.7;
+            transform: translateY(6px);
+            box-shadow: 0 2px 0 #999;
+        }
+        #feedback-message {
+            margin-top: 15px;
+            font-size: 1.1rem;
+            height: 1.5em; /* จองพื้นที่ */
+        }
 
-        /* --- FEEDBACK MESSAGE --- */
-        #feedback {
-            height: 30px; text-align: center; font-weight: 600; margin: 5px 0;
-            display: flex; align-items: center; justify-content: center;
+        /* Choices Grid (สำคัญสำหรับมือถือ) */
+        #options-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* 2 คอลัมน์ */
+            gap: 12px;
+            width: 100%;
+            margin-bottom: 1rem;
         }
-        .msg-correct { color: var(--success); animation: popIn 0.3s; }
-        .msg-wrong { color: var(--error); animation: shake 0.4s; }
-
-        /* --- ANIMATIONS --- */
-        @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         
-        .card-anim-enter { animation: fadeUp 0.4s backwards; }
+        .option-btn {
+            background-color: white;
+            border: 2px solid #EEE;
+            border-radius: 16px;
+            padding: 15px 5px; /* ลด padding ข้าง */
+            cursor: pointer;
+            min-height: 70px; /* กำหนดความสูงขั้นต่ำ */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 0 #DDD;
+            transition: all 0.1s;
+        }
+        
+        .option-btn .item-word {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.6rem; /* ปรับขนาดให้พอดีมือถือ */
+            font-weight: 600;
+            color: var(--text-main);
+            line-height: 1.1;
+            word-break: break-word; /* ป้องกันคำตกขอบ */
+        }
+
+        .option-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 #DDD;
+        }
+
+        /* สถานะถูก/ผิด */
+        .option-btn.correct {
+            background-color: var(--correct-color);
+            border-color: var(--correct-shadow);
+            box-shadow: 0 4px 0 var(--correct-shadow);
+        }
+        .option-btn.correct .item-word { color: white; }
+
+        .option-btn.incorrect {
+            background-color: var(--wrong-color);
+            border-color: var(--wrong-shadow);
+            box-shadow: 0 4px 0 var(--wrong-shadow);
+            animation: shake 0.4s;
+        }
+        .option-btn.incorrect .item-word { color: white; }
+
+        @keyframes shake {
+            0%, 100% {transform: translateX(0);}
+            25% {transform: translateX(-5px);}
+            75% {transform: translateX(5px);}
+        }
+
+        /* Footer (Sticky Bottom Button) */
+        #game-footer {
+            padding: 1rem 0;
+            width: 100%;
+        }
+        #next-btn {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            font-family: 'Sarabun', sans-serif;
+            cursor: pointer;
+            box-shadow: 0 6px 0 var(--primary-shadow);
+            transition: all 0.1s;
+        }
+        #next-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 var(--primary-shadow);
+        }
+        #next-btn:disabled {
+            background-color: #CCC;
+            box-shadow: 0 6px 0 #999;
+            cursor: not-allowed;
+        }
+
+        /* ปรับแต่ง Scrollbar ให้สวยงาม */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 10px; }
 
     </style>
 </head>
 <body>
 
-<div class="app-container">
-    <header id="app-header">
-        <h1>Word Match 🚀</h1>
-    </header>
+    <div class="container">
+        <header>
+            <h1>Word Pop</h1>
+        </header>
 
-    <div id="screen-select" class="screen active">
-        <h2>เลือกด่าน (Levels)</h2>
-        <p class="subtitle">ฝึกคำศัพท์พร้อมคำแปล 15 ด่าน</p>
-        <div class="level-grid" id="level-list"></div>
-    </div>
-
-    <div id="screen-summary" class="screen">
-        <h2>คำศัพท์ Level <span id="sum-lvl">1</span></h2>
-        <div id="summary-list"></div>
-        <div style="margin-top: auto;">
-            <button id="btn-start" class="btn btn-play">🎮 เริ่มเกม</button>
-            <button onclick="goHome()" class="btn btn-home">🏠 กลับ</button>
-        </div>
-    </div>
-
-    <div id="screen-game" class="screen">
-        <div class="status-bar">
-            <div class="stat"><span class="stat-label">LEVEL</span><span class="stat-val" id="disp-lvl">1</span></div>
-            <div class="stat"><span class="stat-label">MATCH</span><span class="stat-val" id="disp-pair">0/6</span></div>
-            <div class="stat"><span class="stat-label">TIME</span><span class="stat-val" id="disp-time">00:00</span></div>
-        </div>
-
-        <div class="game-board" id="game-board"></div>
-        <div id="feedback"></div>
-
-        <div id="ctrl-play" style="margin-top: auto;">
-            <button onclick="goHome()" class="btn btn-home">🏠 กลับหน้าหลัก</button>
-        </div>
-
-        <div id="ctrl-end" style="margin-top: auto; display: none;">
-            <button id="btn-replay" class="btn btn-play">🔄 เล่นอีกครั้ง</button>
-            <button id="btn-next" class="btn btn-next">▶️ ด่านถัดไป</button>
-            <button onclick="goHome()" class="btn btn-home">🏠 กลับหน้าหลัก</button>
-        </div>
-    </div>
-</div>
-
-<script>
-    /* --- DATA: 15 LEVELS (90 Pairs total) --- */
-    const createData = (w, i, id, th) => ({ word: w, icon: i, matchId: id, thai: th });
-    
-    // Total 15 Levels x (6 or 8 or 10 or 12 pairs)
-    const VOCAB_DB = [
-        // L1 (6)
-        createData("Cat", "🐱", 1, "แมว"), createData("Dog", "🐶", 2, "สุนัข"), 
-        createData("Car", "🚗", 3, "รถยนต์"), createData("Sun", "☀️", 4, "พระอาทิตย์"), 
-        createData("Tree", "🌳", 5, "ต้นไม้"), createData("Ball", "⚽", 6, "ลูกบอล"),
-        // L2 (6)
-        createData("Apple", "🍎", 7, "แอปเปิ้ล"), createData("Banana", "🍌", 8, "กล้วย"), 
-        createData("Red", "🔴", 9, "สีแดง"), createData("Blue", "🔵", 10, "สีน้ำเงิน"), 
-        createData("House", "🏠", 11, "บ้าน"), createData("Clock", "⏰", 12, "นาฬิกา"),
-        // L3 (6)
-        createData("Walk", "🚶", 13, "เดิน"), createData("Run", "🏃", 14, "วิ่ง"), 
-        createData("Sit", "🪑", 15, "นั่ง"), createData("Sleep", "😴", 16, "นอนหลับ"), 
-        createData("Drink", "🥛", 17, "ดื่ม"), createData("Eat", "🍽️", 18, "กิน"),
-        // L4 (6)
-        createData("Gift", "🎁", 19, "ของขวัญ"), createData("Love", "❤️", 20, "ความรัก"), 
-        createData("Happy", "😊", 21, "มีความสุข"), createData("Sad", "😔", 22, "เสียใจ"), 
-        createData("Idea", "💡", 23, "ความคิด"), createData("Key", "🔑", 24, "กุญแจ"),
-        // L5 (8)
-        createData("Money", "💰", 25, "เงิน"), createData("Ticket", "🎫", 26, "ตั๋ว"), 
-        createData("Pen", "🖊️", 27, "ปากกา"), createData("Cup", "☕", 28, "ถ้วยกาแฟ"), 
-        createData("Flag", "🚩", 29, "ธง"), createData("Water", "💧", 30, "น้ำ"),
-        createData("Fire", "🔥", 31, "ไฟ"), createData("Book", "📚", 32, "หนังสือ"),
-        // L6 (8)
-        createData("Cloud", "☁️", 33, "เมฆ"), createData("Rain", "🌧️", 34, "ฝน"), 
-        createData("Snow", "❄️", 35, "หิมะ"), createData("Flower", "🌸", 36, "ดอกไม้"), 
-        createData("Mountain", "⛰️", 37, "ภูเขา"), createData("Moon", "🌕", 38, "พระจันทร์"),
-        createData("Road", "🛣️", 39, "ถนน"), createData("Boat", "⛵", 40, "เรือ"),
-        // L7 (8)
-        createData("Doctor", "🧑‍⚕️", 41, "หมอ"), createData("Police", "👮", 42, "ตำรวจ"), 
-        createData("Chef", "🧑‍🍳", 43, "พ่อครัว"), createData("King", "👑", 44, "ราชา"), 
-        createData("Family", "👪", 45, "ครอบครัว"), createData("Baby", "👶", 46, "ทารก"),
-        createData("Hand", "✋", 47, "มือ"), createData("Eye", "👁️", 48, "ตา"),
-        // L8 (8)
-        createData("Ear", "👂", 49, "หู"), createData("Computer", "🖥️", 50, "คอมพิวเตอร์"), 
-        createData("Mouse", "🖱️", 51, "เมาส์"), createData("Email", "📧", 52, "อีเมล"), 
-        createData("Calendar", "📅", 53, "ปฏิทิน"), createData("Bus", "🚌", 54, "รถบัส"),
-        createData("Truck", "🚚", 55, "รถบรรทุก"), createData("Pizza", "🍕", 56, "พิซซ่า"),
-        // L9 (10)
-        createData("Wine", "🍷", 57, "ไวน์"), createData("Beer", "🍺", 58, "เบียร์"), 
-        createData("Shirt", "👕", 59, "เสื้อเชิ้ต"), createData("Camera", "📷", 60, "กล้อง"), 
-        createData("Video", "📹", 61, "วิดีโอ"), createData("Note", "📝", 62, "โน้ต"),
-        createData("Math", "🧮", 63, "คณิตศาสตร์"), createData("Globe", "🌍", 64, "ลูกโลก"), 
-        createData("Bag", "👜", 65, "กระเป๋า"), createData("Bike", "🚲", 66, "จักรยาน"),
-        // L10 (10)
-        createData("Train", "🚂", 67, "รถไฟ"), createData("Tent", "⛺", 68, "เต็นท์"), 
-        createData("Wifi", "📶", 69, "ไวไฟ"), createData("Lock", "🔒", 70, "ล็อค"), 
-        createData("Open", "🔓", 71, "เปิด"), createData("Up", "⬆️", 72, "ขึ้น"),
-        createData("Down", "⬇️", 73, "ลง"), createData("Plus", "➕", 74, "บวก"), 
-        createData("Minus", "➖", 75, "ลบ"), createData("Star", "⭐", 76, "ดาว"),
-        // L11 (12)
-        createData("Game", "🎮", 77, "เกม"), createData("Music", "🎵", 78, "ดนตรี"), 
-        createData("Mute", "🔇", 79, "ปิดเสียง"), createData("Volume", "🔊", 80, "เสียง"), 
-        createData("Lamp", "🛋️", 81, "โคมไฟ"), createData("Bed", "🛏️", 82, "เตียง"),
-        createData("Bath", "🛁", 83, "อ่าง"), createData("Toilet", "🚽", 84, "ห้องน้ำ"), 
-        createData("Earth", "🌎", 85, "โลก"), createData("Mars", "🔴", 86, "ดาวอังคาร"), 
-        createData("Ring", "💍", 87, "แหวน"), createData("Diamond", "💎", 88, "เพชร"),
-        // L12 (12)
-        createData("Shield", "🛡️", 89, "โล่"), createData("Sword", "⚔️", 90, "ดาบ"), 
-        createData("Crown", "👑", 91, "มงกุฎ"), createData("Castle", "🏰", 92, "ปราสาท"), 
-        createData("Ghost", "👻", 93, "ผี"), createData("Witch", "🧙", 94, "แม่มด"),
-        createData("Alien", "👽", 95, "เอเลี่ยน"), createData("Robot", "🤖", 96, "หุ่นยนต์"), 
-        createData("Skull", "💀", 97, "กะโหลก"), createData("Bomb", "💣", 98, "ระเบิด"), 
-        createData("Rocket", "🚀", 99, "จรวด"), createData("UFO", "🛸", 100, "จานบิน"),
-        // L13 (12)
-        createData("Lion", "🦁", 101, "สิงโต"), createData("Tiger", "🐯", 102, "เสือ"), 
-        createData("Bear", "🐻", 103, "หมี"), createData("Elephant", "🐘", 104, "ช้าง"), 
-        createData("Monkey", "🐵", 105, "ลิง"), createData("Panda", "🐼", 106, "แพนด้า"), 
-        createData("Koala", "🐨", 107, "โคอาล่า"), createData("Pig", "🐷", 108, "หมู"),
-        createData("Fox", "🦊", 109, "จิ้งจอก"), createData("Rabbit", "🐰", 110, "กระต่าย"),
-        createData("Chicken", "🐔", 111, "ไก่"), createData("Duck", "🦆", 112, "เป็ด"),
-        // L14 (12)
-        createData("Grape", "🍇", 113, "องุ่น"), createData("Melon", "🍈", 114, "เมล่อน"), 
-        createData("Lemon", "🍋", 115, "มะนาว"), createData("Peach", "🍑", 116, "ลูกพีช"), 
-        createData("Cherry", "🍒", 117, "เชอร์รี่"), createData("Strawberry", "🍓", 118, "สตรอว์เบอร์รี"), 
-        createData("Kiwi", "🥝", 119, "กีวี่"), createData("Corn", "🌽", 120, "ข้าวโพด"),
-        createData("Carrot", "🥕", 121, "แครอท"), createData("Potato", "🥔", 122, "มันฝรั่ง"),
-        createData("Tomato", "🍅", 123, "มะเขือเทศ"), createData("Onion", "🧅", 124, "หอมใหญ่"),
-        // L15 (12)
-        createData("Glasses", "👓", 125, "แว่นตา"), createData("Sunglasses", "🕶️", 126, "แว่นกันแดด"),
-        createData("Tie", "👔", 127, "เนคไท"), createData("Jeans", "👖", 128, "ยีนส์"),
-        createData("Dress", "👗", 129, "เดรส"), createData("Bikini", "👙", 130, "บิกินี่"),
-        createData("Purse", "👛", 131, "กระเป๋า"), createData("Shoe", "👞", 132, "รองเท้า"),
-        createData("Sneaker", "👟", 133, "ผ้าใบ"), createData("Heels", "👠", 134, "ส้นสูง"),
-        createData("Boot", "👢", 135, "บูท"), createData("Cap", "🧢", 136, "หมวก")
-    ];
-
-    const LEVELS_CFG = [
-        {id:1, grid:'4x3', start:0, count:6}, {id:2, grid:'4x3', start:6, count:6},
-        {id:3, grid:'4x3', start:12, count:6}, {id:4, grid:'4x3', start:18, count:6},
-        {id:5, grid:'4x4', start:24, count:8}, {id:6, grid:'4x4', start:32, count:8},
-        {id:7, grid:'4x4', start:40, count:8}, {id:8, grid:'4x4', start:48, count:8},
-        {id:9, grid:'4x5', start:56, count:10}, {id:10, grid:'4x5', start:66, count:10},
-        {id:11, grid:'4x6', start:76, count:12}, {id:12, grid:'4x6', start:88, count:12},
-        {id:13, grid:'4x6', start:100, count:12}, {id:14, grid:'4x6', start:112, count:12},
-        {id:15, grid:'4x6', start:124, count:12}
-    ];
-
-    // --- STATE ---
-    let currentLevel = 1;
-    let cards = [];
-    let flipped = [];
-    let pairsFound = 0;
-    let timer = null;
-    let timeStart = 0;
-    let isLocked = false;
-
-    // --- SETUP ---
-    function init() {
-        const grid = document.getElementById('level-list');
-        LEVELS_CFG.forEach(lvl => {
-            const btn = document.createElement('button');
-            // Theme Class
-            let cls = 'theme-blue';
-            if(lvl.id > 4) cls = 'theme-violet';
-            if(lvl.id > 8) cls = 'theme-orange';
-            if(lvl.id > 10) cls = 'theme-teal';
-            if(lvl.id > 12) cls = 'theme-red';
-
-            btn.className = `btn btn-lvl ${cls}`;
-            btn.innerHTML = `Level ${lvl.id}<span>${lvl.grid}</span>`;
-            btn.onclick = () => showSummary(lvl.id);
-            grid.appendChild(btn);
-        });
-
-        // Event Listeners
-        document.getElementById('btn-start').onclick = () => startGame(currentLevel);
-        document.getElementById('btn-replay').onclick = () => startGame(currentLevel);
-        document.getElementById('btn-next').onclick = () => showSummary(currentLevel + 1);
-    }
-
-    // --- FLOW ---
-    function showSummary(lvlId) {
-        if(lvlId > LEVELS_CFG.length) return goHome();
-        currentLevel = lvlId;
-        
-        applyTheme(lvlId);
-        switchScreen('screen-summary');
-        
-        document.getElementById('sum-lvl').textContent = lvlId;
-        const cfg = LEVELS_CFG.find(l => l.id === lvlId);
-        const words = VOCAB_DB.slice(cfg.start, cfg.start + cfg.count);
-        
-        const list = document.getElementById('summary-list');
-        list.innerHTML = '';
-        words.forEach(w => {
-            list.innerHTML += `
-                <div class="vocab-card">
-                    <span class="v-icon">${w.icon}</span>
-                    <div class="v-text">
-                        <span class="v-en">${w.word}</span>
-                        <span class="v-th">${w.thai}</span>
-                    </div>
-                </div>`;
-        });
-    }
-
-    function startGame(lvlId) {
-        switchScreen('screen-game');
-        
-        const cfg = LEVELS_CFG.find(l => l.id === lvlId);
-        const words = VOCAB_DB.slice(cfg.start, cfg.start + cfg.count);
-        
-        // Reset
-        flipped = [];
-        pairsFound = 0;
-        isLocked = false;
-        document.getElementById('disp-lvl').textContent = lvlId;
-        document.getElementById('disp-pair').textContent = `0/${cfg.count}`;
-        document.getElementById('feedback').innerHTML = '';
-        
-        // Controls
-        document.getElementById('ctrl-play').style.display = 'block';
-        document.getElementById('ctrl-end').style.display = 'none';
-
-        // Timer
-        timeStart = Date.now();
-        clearInterval(timer);
-        timer = setInterval(() => {
-            const d = Math.floor((Date.now() - timeStart)/1000);
-            const m = String(Math.floor(d/60)).padStart(2,'0');
-            const s = String(d%60).padStart(2,'0');
-            document.getElementById('disp-time').textContent = `${m}:${s}`;
-        }, 1000);
-
-        // Grid
-        const board = document.getElementById('game-board');
-        board.innerHTML = '';
-        
-        // Create Deck
-        let deck = [];
-        words.forEach(w => {
-            deck.push({type:'word', ...w});
-            deck.push({type:'icon', ...w});
-        });
-        // Shuffle
-        deck.sort(() => Math.random() - 0.5);
-        
-        // Render with Staggered Animation
-        cards = deck;
-        deck.forEach((c, idx) => {
-            const card = document.createElement('div');
-            card.className = 'card card-anim-enter';
-            card.style.animationDelay = `${idx * 0.05}s`; // Stagger effect
-            card.dataset.idx = idx;
-            card.onclick = handleCardClick;
+        <div id="level-select-screen" class="screen active">
+            <div style="text-align: left; padding: 0 5px;">
+                <h2 style="margin: 0; color: #555;">เลือกด่านฝึกฝน</h2>
+                <p style="margin: 5px 0 15px 0; color: #888; font-size: 0.9rem;">20 Levels • 200 คำศัพท์</p>
+            </div>
             
-            const content = c.type === 'word' 
-                ? `<span class="txt-content">${c.word}</span>` 
-                : `<span class="icon-content">${c.icon}</span>`;
+            <div class="level-grid" id="level-grid">
+                </div>
+        </div>
 
-            card.innerHTML = `
-                <div class="card-inner">
-                    <div class="card-face card-front">${content}</div>
-                    <div class="card-face card-back"></div>
-                </div>`;
-            board.appendChild(card);
-        });
-    }
+        <div id="game-screen" class="screen">
+            <div class="top-content">
+                <div class="status-bar">
+                    <span id="level-title">Level 1</span>
+                    <span id="q-count">1/10</span>
+                </div>
 
-    function handleCardClick(e) {
-        if(isLocked) return;
-        const el = e.currentTarget;
-        const idx = el.dataset.idx;
-        
-        if(el.classList.contains('flipped') || el.classList.contains('matched')) return;
+                <div id="prompt-area">
+                    <button id="audio-button" aria-label="Listen">
+                        <span>🔊</span>
+                    </button>
+                    <div id="feedback-message">แตะเพื่อฟังเสียง</div>
+                </div>
 
-        playBeep(600); // Click sound
-        el.classList.add('flipped');
-        flipped.push({el, data: cards[idx]});
+                <div id="options-area">
+                    </div>
+            </div>
 
-        if(flipped.length === 2) {
-            isLocked = true;
-            checkMatch();
+            <div id="game-footer">
+                <button id="next-btn" disabled>ข้อถัดไป ➜</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="word-prompt-text" style="display: none;"></div>
+
+    <script>
+        /* ------------------- DATA (20 Levels, 10 Words Each) ------------------- */
+        // ข้อมูลทั้งหมดเป็นตัวพิมพ์เล็ก (lowercase) เพื่อให้ TTS อ่านถูกต้อง 100%
+        const ALL_LEVEL_WORDS = [
+            { level: 1, title: "สระ A (สั้น)", questions: [
+                { word: "cat", correct: "cat", options: ["cut", "cot", "hat", "cat"] },
+                { word: "bat", correct: "bat", options: ["bet", "bit", "but", "bat"] },
+                { word: "map", correct: "map", options: ["mop", "man", "mate", "map"] },
+                { word: "mad", correct: "mad", options: ["bed", "mud", "made", "mad"] },
+                { word: "fan", correct: "fan", options: ["fin", "fun", "fed", "fan"] },
+                { word: "can", correct: "can", options: ["con", "cut", "ken", "can"] },
+                { word: "wag", correct: "wag", options: ["wig", "web", "wog", "wag"] },
+                { word: "gap", correct: "gap", options: ["gab", "got", "get", "gap"] },
+                { word: "jam", correct: "jam", options: ["jem", "jim", "gum", "jam"] },
+                { word: "dad", correct: "dad", options: ["did", "dot", "dude", "dad"] }
+            ]},
+            { level: 2, title: "สระ E, I (สั้น)", questions: [
+                { word: "red", correct: "red", options: ["rad", "rid", "rod", "red"] },
+                { word: "ten", correct: "ten", options: ["tin", "tan", "ton", "ten"] },
+                { word: "bed", correct: "bed", options: ["bid", "bad", "bud", "bed"] },
+                { word: "pin", correct: "pin", options: ["pan", "pen", "pun", "pin"] },
+                { word: "big", correct: "big", options: ["bag", "bug", "beg", "big"] },
+                { word: "lip", correct: "lip", options: ["lap", "lop", "lup", "lip"] },
+                { word: "six", correct: "six", options: ["sax", "sex", "sux", "six"] },
+                { word: "jet", correct: "jet", options: ["jot", "jig", "jag", "jet"] },
+                { word: "hen", correct: "hen", options: ["han", "hon", "him", "hen"] },
+                { word: "kit", correct: "kit", options: ["cat", "cot", "cut", "kit"] }
+            ]},
+            { level: 3, title: "สระ O, U (สั้น)", questions: [
+                { word: "fox", correct: "fox", options: ["fix", "fex", "fax", "fox"] },
+                { word: "sun", correct: "sun", options: ["son", "sin", "san", "sun"] },
+                { word: "box", correct: "box", options: ["back", "bix", "bush", "box"] },
+                { word: "dog", correct: "dog", options: ["dig", "dag", "dug", "dog"] },
+                { word: "cup", correct: "cup", options: ["cap", "cop", "kip", "cup"] },
+                { word: "nut", correct: "nut", options: ["not", "nat", "net", "nut"] },
+                { word: "bug", correct: "bug", options: ["bag", "big", "bog", "bug"] },
+                { word: "mop", correct: "mop", options: ["map", "mip", "mup", "mop"] },
+                { word: "hot", correct: "hot", options: ["hat", "hit", "hut", "hot"] },
+                { word: "run", correct: "run", options: ["ran", "rin", "rock", "run"] }
+            ]},
+            { level: 4, title: "สระผสม 1", questions: [
+                { word: "swim", correct: "swim", options: ["swam", "swum", "slim", "swim"] },
+                { word: "desk", correct: "desk", options: ["disk", "dusk", "dice", "desk"] },
+                { word: "crab", correct: "crab", options: ["crap", "crib", "crop", "crab"] },
+                { word: "trip", correct: "trip", options: ["trap", "top", "type", "trip"] },
+                { word: "slug", correct: "slug", options: ["slab", "slop", "slim", "slug"] },
+                { word: "plum", correct: "plum", options: ["plan", "plot", "plume", "plum"] },
+                { word: "frog", correct: "frog", options: ["flag", "fry", "frag", "frog"] },
+                { word: "dress", correct: "dress", options: ["draw", "drop", "drift", "dress"] },
+                { word: "belt", correct: "belt", options: ["bill", "bolt", "bent", "belt"] },
+                { word: "camp", correct: "camp", options: ["comb", "crimp", "clam", "camp"] }
+            ]},
+            { level: 5, title: "ควบกล้ำ L", questions: [
+                { word: "blue", correct: "blue", options: ["blow", "blew", "buy", "blue"] },
+                { word: "clay", correct: "clay", options: ["clue", "clash", "class", "clay"] },
+                { word: "glad", correct: "glad", options: ["glass", "gold", "grip", "glad"] },
+                { word: "plan", correct: "plan", options: ["plane", "play", "plus", "plan"] },
+                { word: "flea", correct: "flea", options: ["fly", "free", "flat", "flea"] },
+                { word: "slip", correct: "slip", options: ["slap", "slope", "sleep", "slip"] },
+                { word: "club", correct: "club", options: ["clap", "clog", "cube", "club"] },
+                { word: "flute", correct: "flute", options: ["float", "fruit", "foot", "flute"] },
+                { word: "glove", correct: "glove", options: ["glue", "glass", "globe", "glove"] },
+                { word: "plank", correct: "plank", options: ["plane", "plan", "pinch", "plank"] }
+            ]},
+            { level: 6, title: "ควบกล้ำ R", questions: [
+                { word: "press", correct: "press", options: ["price", "pray", "prince", "press"] },
+                { word: "trip", correct: "trip", options: ["trap", "top", "type", "trip"] },
+                { word: "bring", correct: "bring", options: ["brain", "rang", "ring", "bring"] },
+                { word: "drop", correct: "drop", options: ["drip", "drag", "drove", "drop"] },
+                { word: "free", correct: "free", options: ["fly", "frog", "fry", "free"] },
+                { word: "grape", correct: "grape", options: ["great", "grip", "grace", "grape"] },
+                { word: "crib", correct: "crib", options: ["crop", "crab", "crip", "crib"] },
+                { word: "frame", correct: "frame", options: ["firm", "farm", "foam", "frame"] },
+                { word: "proud", correct: "proud", options: ["pride", "prize", "pound", "proud"] },
+                { word: "train", correct: "train", options: ["trend", "tiny", "turn", "train"] }
+            ]},
+            { level: 7, title: "เสียง Sh, Ch, Th", questions: [
+                { word: "ship", correct: "ship", options: ["sip", "chip", "shop", "ship"] },
+                { word: "chair", correct: "chair", options: ["cheer", "care", "share", "chair"] },
+                { word: "thumb", correct: "thumb", options: ["sum", "tub", "pump", "thumb"] },
+                { word: "cash", correct: "cash", options: ["kiss", "crash", "car", "cash"] },
+                { word: "peach", correct: "peach", options: ["pitch", "peak", "push", "peach"] },
+                { word: "think", correct: "think", options: ["sink", "thank", "thin", "think"] },
+                { word: "shop", correct: "shop", options: ["chop", "ship", "short", "shop"] },
+                { word: "lunch", correct: "lunch", options: ["lunge", "latch", "long", "lunch"] },
+                { word: "bath", correct: "bath", options: ["bathe", "both", "path", "bath"] },
+                { word: "wheel", correct: "wheel", options: ["weel", "whale", "will", "wheel"] }
+            ]},
+            { level: 8, title: "สระยาว A", questions: [
+                { word: "make", correct: "make", options: ["mack", "mike", "moke", "make"] },
+                { word: "rain", correct: "rain", options: ["ran", "rent", "reign", "rain"] },
+                { word: "day", correct: "day", options: ["die", "dot", "due", "day"] },
+                { word: "game", correct: "game", options: ["gem", "gome", "gum", "game"] },
+                { word: "play", correct: "play", options: ["plea", "ploy", "pull", "play"] },
+                { word: "tail", correct: "tail", options: ["tell", "tool", "tile", "tail"] },
+                { word: "cake", correct: "cake", options: ["cook", "kick", "kake", "cake"] },
+                { word: "bay", correct: "bay", options: ["bye", "bobby", "bee", "bay"] },
+                { word: "snail", correct: "snail", options: ["snell", "snarl", "smile", "snail"] },
+                { word: "plane", correct: "plane", options: ["plan", "plum", "plain", "plane"] }
+            ]},
+            { level: 9, title: "สระยาว E", questions: [
+                { word: "see", correct: "see", options: ["sea", "say", "so", "see"] },
+                { word: "meet", correct: "meet", options: ["mate", "might", "meat", "meet"] },
+                { word: "leaf", correct: "leaf", options: ["life", "lief", "loff", "leaf"] },
+                { word: "green", correct: "green", options: ["grin", "grain", "great", "green"] },
+                { word: "feet", correct: "feet", options: ["fit", "fat", "fought", "feet"] },
+                { word: "team", correct: "team", options: ["time", "tame", "tome", "team"] },
+                { word: "sleep", correct: "sleep", options: ["slip", "slope", "slap", "sleep"] },
+                { word: "bee", correct: "bee", options: ["buy", "bay", "bale", "bee"] },
+                { word: "tree", correct: "tree", options: ["try", "tray", "tire", "tree"] },
+                { word: "read", correct: "read", options: ["rid", "rod", "road", "read"] }
+            ]},
+            { level: 10, title: "สระยาว I", questions: [
+                { word: "bike", correct: "bike", options: ["back", "beck", "book", "bike"] },
+                { word: "fly", correct: "fly", options: ["flea", "flow", "full", "fly"] },
+                { word: "time", correct: "time", options: ["tame", "team", "tome", "time"] },
+                { word: "pie", correct: "pie", options: ["pee", "pay", "poy", "pie"] },
+                { word: "light", correct: "light", options: ["let", "late", "lout", "light"] },
+                { word: "cry", correct: "cry", options: ["crow", "cray", "crew", "cry"] },
+                { word: "five", correct: "five", options: ["fife", "for", "fine", "five"] },
+                { word: "side", correct: "side", options: ["said", "sad", "sod", "side"] },
+                { word: "sky", correct: "sky", options: ["ski", "skay", "sock", "sky"] },
+                { word: "high", correct: "high", options: ["hi", "hoe", "hay", "high"] }
+            ]},
+            { level: 11, title: "สระยาว O", questions: [
+                { word: "nose", correct: "nose", options: ["noose", "noise", "noss", "nose"] },
+                { word: "coat", correct: "coat", options: ["cut", "cot", "kit", "coat"] },
+                { word: "snow", correct: "snow", options: ["snip", "snob", "sneeze", "snow"] },
+                { word: "boat", correct: "boat", options: ["boot", "bought", "bite", "boat"] },
+                { word: "home", correct: "home", options: ["hum", "ham", "hume", "home"] },
+                { word: "road", correct: "road", options: ["red", "ride", "rod", "road"] },
+                { word: "toe", correct: "toe", options: ["too", "two", "toy", "toe"] },
+                { word: "slow", correct: "slow", options: ["slaw", "slot", "slept", "slow"] },
+                { word: "note", correct: "note", options: ["nut", "net", "not", "note"] },
+                { word: "grow", correct: "grow", options: ["gray", "grip", "gear", "grow"] }
+            ]},
+            { level: 12, title: "สระยาว U", questions: [
+                { word: "flute", correct: "flute", options: ["float", "foot", "flat", "flute"] },
+                { word: "glue", correct: "glue", options: ["glow", "glew", "glad", "glue"] },
+                { word: "moon", correct: "moon", options: ["moan", "man", "mine", "moon"] },
+                { word: "blue", correct: "blue", options: ["blow", "blew", "bell", "blue"] },
+                { word: "cube", correct: "cube", options: ["cub", "cab", "cop", "cube"] },
+                { word: "tool", correct: "tool", options: ["tall", "tale", "toll", "tool"] },
+                { word: "food", correct: "food", options: ["fed", "foot", "fade", "food"] },
+                { word: "suit", correct: "suit", options: ["set", "sat", "site", "suit"] },
+                { word: "mule", correct: "mule", options: ["male", "mile", "moll", "mule"] },
+                { word: "pool", correct: "pool", options: ["pole", "pull", "pill", "pool"] }
+            ]},
+            { level: 13, title: "สระ + R", questions: [
+                { word: "car", correct: "car", options: ["care", "core", "cur", "car"] },
+                { word: "form", correct: "form", options: ["firm", "farm", "foam", "form"] },
+                { word: "girl", correct: "girl", options: ["gale", "gore", "gull", "girl"] },
+                { word: "her", correct: "her", options: ["hair", "hear", "hire", "her"] },
+                { word: "star", correct: "star", options: ["stair", "store", "stir", "star"] },
+                { word: "corn", correct: "corn", options: ["coin", "curb", "core", "corn"] },
+                { word: "bird", correct: "bird", options: ["beard", "bore", "bred", "bird"] },
+                { word: "turn", correct: "turn", options: ["tone", "tin", "torn", "turn"] },
+                { word: "park", correct: "park", options: ["perk", "pork", "pike", "park"] },
+                { word: "short", correct: "short", options: ["shirt", "shut", "sort", "short"] }
+            ]},
+            { level: 14, title: "2 พยางค์ (นาม)", questions: [
+                { word: "pencil", correct: "pencil", options: ["pen", "pimple", "pestle", "pencil"] },
+                { word: "table", correct: "table", options: ["tailor", "stable", "label", "table"] },
+                { word: "tiger", correct: "tiger", options: ["tire", "tighter", "tie", "tiger"] },
+                { word: "flower", correct: "flower", options: ["flour", "flow", "foul", "flower"] },
+                { word: "cookie", correct: "cookie", options: ["cuckoo", "cooky", "coke", "cookie"] },
+                { word: "rocket", correct: "rocket", options: ["rock", "rabbit", "racket", "rocket"] },
+                { word: "basket", correct: "basket", options: ["best", "bask", "biscuit", "basket"] },
+                { word: "window", correct: "window", options: ["wine", "wind", "winter", "window"] },
+                { word: "doctor", correct: "doctor", options: ["duck", "direct", "dot", "doctor"] },
+                { word: "magnet", correct: "magnet", options: ["mag", "main", "money", "magnet"] }
+            ]},
+            { level: 15, title: "2 พยางค์ (กริยา)", questions: [
+                { word: "finish", correct: "finish", options: ["fist", "funnel", "fine", "finish"] },
+                { word: "listen", correct: "listen", options: ["lessen", "lisp", "lesson", "listen"] },
+                { word: "forget", correct: "forget", options: ["forgive", "forgo", "figure", "forget"] },
+                { word: "hungry", correct: "hungry", options: ["anger", "hunker", "hairy", "hungry"] },
+                { word: "before", correct: "before", options: ["for", "four", "bore", "before"] },
+                { word: "happy", correct: "happy", options: ["hoppy", "hip", "help", "happy"] },
+                { word: "ready", correct: "ready", options: ["read", "ruddy", "ray", "ready"] },
+                { word: "today", correct: "today", options: ["tonight", "toad", "two", "today"] },
+                { word: "open", correct: "open", options: ["hope", "oats", "often", "open"] },
+                { word: "answer", correct: "answer", options: ["ant", "enter", "and", "answer"] }
+            ]},
+            { level: 16, title: "3 พยางค์ (ง่าย)", questions: [
+                { word: "banana", correct: "banana", options: ["manana", "bandana", "bonanza", "banana"] },
+                { word: "family", correct: "family", options: ["famine", "farm", "firmly", "family"] },
+                { word: "company", correct: "company", options: ["comet", "come", "comply", "company"] },
+                { word: "camera", correct: "camera", options: ["camper", "car", "karma", "camera"] },
+                { word: "holiday", correct: "holiday", options: ["hole", "holy", "hallway", "holiday"] },
+                { word: "america", correct: "america", options: ["amuse", "merry", "murmur", "america"] },
+                { word: "animal", correct: "animal", options: ["annoy", "annual", "ally", "animal"] },
+                { word: "bicycle", correct: "bicycle", options: ["bike", "by", "cycle", "bicycle"] },
+                { word: "pirate", correct: "pirate", options: ["parade", "private", "prior", "pirate"] },
+                { word: "umbrella", correct: "umbrella", options: ["humble", "number", "unreal", "umbrella"] }
+            ]},
+            { level: 17, title: "3 พยางค์ (กลาง)", questions: [
+                { word: "difficult", correct: "difficult", options: ["dig", "digging", "daddy", "difficult"] },
+                { word: "tomorrow", correct: "tomorrow", options: ["toma", "tummy", "tomb", "tomorrow"] },
+                { word: "elephant", correct: "elephant", options: ["elegant", "aloe", "elphant", "elephant"] },
+                { word: "yesterday", correct: "yesterday", options: ["yes", "yester", "day", "yesterday"] },
+                { word: "continue", correct: "continue", options: ["content", "control", "count", "continue"] },
+                { word: "together", correct: "together", options: ["tougher", "toga", "tender", "together"] },
+                { word: "accident", correct: "accident", options: ["axe", "action", "access", "accident"] },
+                { word: "decorate", correct: "decorate", options: ["deck", "direct", "dot", "decorate"] },
+                { word: "delivery", correct: "delivery", options: ["deliver", "delay", "deal", "delivery"] },
+                { word: "customer", correct: "customer", options: ["custom", "cast", "cost", "customer"] }
+            ]},
+            { level: 18, title: "3 พยางค์ (ยาก)", questions: [
+                { word: "important", correct: "important", options: ["impact", "implant", "impatient", "important"] },
+                { word: "adventure", correct: "adventure", options: ["advance", "advisor", "advent", "adventure"] },
+                { word: "beautiful", correct: "beautiful", options: ["bootiful", "beauty", "butter", "beautiful"] },
+                { word: "introduce", correct: "introduce", options: ["intro", "indoor", "interest", "introduce"] },
+                { word: "remember", correct: "remember", options: ["member", "reborn", "remover", "remember"] },
+                { word: "delicious", correct: "delicious", options: ["delight", "decisive", "delete", "delicious"] },
+                { word: "wonderful", correct: "wonderful", options: ["wonder", "wind", "wave", "wonderful"] },
+                { word: "surprised", correct: "surprised", options: ["sure", "supply", "side", "surprised"] },
+                { word: "exciting", correct: "exciting", options: ["exit", "extra", "exact", "exciting"] },
+                { word: "powerful", correct: "powerful", options: ["power", "paw", "push", "powerful"] }
+            ]},
+            { level: 19, title: "4 พยางค์ (ง่าย)", questions: [
+                { word: "computer", correct: "computer", options: ["compare", "compete", "commute", "computer"] },
+                { word: "solution", correct: "solution", options: ["solve", "sole", "salute", "solution"] },
+                { word: "apology", correct: "apology", options: ["apply", "apple", "apocalypse", "apology"] },
+                { word: "necessary", correct: "necessary", options: ["nestle", "nerve", "new", "necessary"] },
+                { word: "activity", correct: "activity", options: ["active", "act", "actor", "activity"] },
+                { word: "discovery", correct: "discovery", options: ["disagree", "discuss", "disc", "discovery"] },
+                { word: "geography", correct: "geography", options: ["geo", "graph", "grave", "geography"] },
+                { word: "security", correct: "security", options: ["sure", "secret", "section", "security"] },
+                { word: "celebrity", correct: "celebrity", options: ["sell", "select", "cell", "celebrity"] },
+                { word: "education", correct: "education", options: ["edit", "echo", "eager", "education"] }
+            ]},
+            { level: 20, title: "4 พยางค์ (ยาก)", questions: [
+                { word: "vocabulary", correct: "vocabulary", options: ["voice", "vocal", "vacation", "vocabulary"] },
+                { word: "experiment", correct: "experiment", options: ["experience", "expert", "express", "experiment"] },
+                { word: "vegetable", correct: "vegetable", options: ["very", "vet", "visit", "vegetable"] },
+                { word: "advisable", correct: "advisable", options: ["advice", "visual", "visa", "advisable"] },
+                { word: "available", correct: "available", options: ["avoid", "avocado", "able", "available"] },
+                { word: "community", correct: "community", options: ["common", "comment", "come", "community"] },
+                { word: "deliciously", correct: "deliciously", options: ["delight", "deliberate", "delete", "deliciously"] },
+                { word: "historical", correct: "historical", options: ["history", "store", "start", "historical"] },
+                { word: "magical", correct: "magical", options: ["major", "magic", "manage", "magical"] },
+                { word: "technology", correct: "technology", options: ["technical", "tek", "tailor", "technology"] }
+            ]}
+        ];
+
+        // --- GAME VARIABLES ---
+        const MAX_REPLAY_COUNT = 3; 
+        const synth = window.speechSynthesis;
+        let voice = null; 
+        let isSpeaking = false;
+
+        let currentLevelData = null;
+        let currentQuizIndex = 0; 
+        let score = 0;
+        let isAnswered = false;
+        let currentWord = {}; 
+        let audioPlayCount = 0; 
+
+        // --- DOM ELEMENTS ---
+        const levelSelectScreen = document.getElementById('level-select-screen');
+        const gameScreen = document.getElementById('game-screen');
+        const levelGridEl = document.getElementById('level-grid');
+        const levelTitleEl = document.getElementById('level-title');
+        const qCountEl = document.getElementById('q-count');
+        const audioButton = document.getElementById('audio-button');
+        const feedbackMessageEl = document.getElementById('feedback-message');
+        const optionsArea = document.getElementById('options-area');
+        const nextBtn = document.getElementById('next-btn');
+
+        // --- TTS SYSTEM (CRITICAL FIX) ---
+        function initTTS() {
+            if (voice) return;
+            const voices = synth.getVoices();
+            // เลือกเสียงภาษาอังกฤษที่คุณภาพดีที่สุด
+            // Google US English มักจะออกเสียงคำศัพท์ได้เป็นธรรมชาติที่สุด
+            voice = voices.find(v => v.name.includes("Google US English")) || 
+                    voices.find(v => v.lang === 'en-US') || 
+                    voices.find(v => v.lang.startsWith('en-'));
         }
-    }
 
-    function checkMatch() {
-        const [c1, c2] = flipped;
-        const isMatch = c1.data.matchId === c2.data.matchId;
+        function speakWord(text) {
+            if (!synth || !text) return;
+            
+            synth.cancel(); // หยุดเสียงเก่าก่อน
+            
+            // *** เคล็ดลับสำคัญ: เพิ่ม "." ต่อท้ายคำเพื่อบังคับให้ระบบอ่านเป็นประโยค/คำ ไม่ใช่สะกดทีละตัว ***
+            const utterance = new SpeechSynthesisUtterance(text + "."); 
+            
+            utterance.lang = 'en-US'; 
+            utterance.rate = 0.9; // ความเร็วปกติค่อนไปทางช้าเพื่อให้ฟังชัด
+            utterance.voice = voice;
+            
+            utterance.onstart = () => { isSpeaking = true; audioButton.disabled = true; };
+            utterance.onend = () => { 
+                isSpeaking = false; 
+                if (!isAnswered && audioPlayCount < MAX_REPLAY_COUNT) {
+                    audioButton.disabled = false;
+                }
+            };
+            
+            synth.speak(utterance);
+        }
 
-        if(isMatch) {
-            pairsFound++;
-            playBeep(900, 'sine', 0.2); // Success sound
-            document.getElementById('feedback').innerHTML = `<span class="msg-correct">เยี่ยม! ${c1.data.word}</span>`;
-            document.getElementById('disp-pair').textContent = `${pairsFound}/${LEVELS_CFG.find(l=>l.id===currentLevel).count}`;
+        function speakFeedback(text) {
+            if (!synth) return;
+            synth.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.voice = voice;
+            synth.speak(utterance);
+        }
 
-            // TTS Fix: Convert to Lowercase for correct pronunciation
-            speak(c1.data.word.toLowerCase());
+        // --- GAME LOGIC ---
+        function createLevelButtons() {
+            levelGridEl.innerHTML = '';
+            ALL_LEVEL_WORDS.forEach(data => {
+                const btn = document.createElement('div');
+                btn.className = 'level-btn';
+                btn.textContent = data.level;
+                btn.onclick = () => startLevel(data.level);
+                levelGridEl.appendChild(btn);
+            });
+        }
 
+        function startLevel(levelId) {
+            currentLevelData = ALL_LEVEL_WORDS.find(d => d.level === levelId);
+            currentQuizIndex = 0;
+            score = 0;
+            
+            levelSelectScreen.classList.remove('active');
+            gameScreen.classList.add('active');
+            
+            nextQuestion();
+        }
+
+        function nextQuestion() {
+            if (currentQuizIndex >= currentLevelData.questions.length) {
+                alert(`จบด่าน! คะแนนของคุณ: ${score}/10`);
+                location.reload(); // รีโหลดเพื่อง่ายต่อการเริ่มใหม่
+                return;
+            }
+
+            isAnswered = false;
+            audioPlayCount = 0;
+            
+            // Reset UI
+            nextBtn.disabled = true;
+            nextBtn.style.opacity = "0.5";
+            feedbackMessageEl.textContent = "แตะลำโพงเพื่อฟังเสียง";
+            feedbackMessageEl.style.color = "#888";
+            audioButton.disabled = false;
+
+            updateStatusBar();
+            setupQuestion();
+        }
+
+        function updateStatusBar() {
+            levelTitleEl.textContent = `Level ${currentLevelData.level}`;
+            qCountEl.textContent = `${currentQuizIndex + 1}/10`;
+        }
+
+        function setupQuestion() {
+            const currentQ = currentLevelData.questions[currentQuizIndex];
+            currentWord = currentQ;
+
+            // Shuffle Options
+            const shuffledOptions = [...currentQ.options]
+                .sort(() => Math.random() - 0.5)
+                .map(opt => ({ word: opt, isCorrect: opt === currentQ.correct }));
+
+            optionsArea.innerHTML = '';
+            shuffledOptions.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerHTML = `<span class="item-word">${opt.word.toUpperCase()}</span>`; // แสดงเป็นตัวใหญ่
+                btn.onclick = (e) => handleAnswer(e, opt.isCorrect);
+                optionsArea.appendChild(btn);
+            });
+
+            // Auto Play (ส่งตัวเล็ก + จุด)
             setTimeout(() => {
-                c1.el.classList.add('matched');
-                c2.el.classList.add('matched');
-                flipped = [];
-                isLocked = false;
+                speakWord(currentWord.word.toLowerCase());
+                audioPlayCount = 1;
+            }, 300);
+        }
+
+        function handleAnswer(e, isCorrect) {
+            if (isAnswered) return;
+            isAnswered = true;
+
+            const btn = e.currentTarget;
+            audioButton.disabled = true;
+
+            if (isCorrect) {
+                score++;
+                btn.classList.add('correct');
+                feedbackMessageEl.textContent = "ถูกต้อง! Excellent!";
+                feedbackMessageEl.style.color = "var(--correct-shadow)";
+                speakFeedback("Correct!");
+            } else {
+                btn.classList.add('incorrect');
+                feedbackMessageEl.textContent = `ผิด! คำตอบคือ ${currentWord.correct.toUpperCase()}`;
+                feedbackMessageEl.style.color = "var(--wrong-shadow)";
+                speakFeedback("Incorrect. The answer is " + currentWord.word);
                 
-                if(pairsFound === LEVELS_CFG.find(l=>l.id===currentLevel).count) endGame();
-            }, 800);
-        } else {
-            playBeep(150, 'sawtooth', 0.3); // Error sound
-            document.getElementById('feedback').innerHTML = `<span class="msg-wrong">ผิดจ้า!</span>`;
-            setTimeout(() => {
-                c1.el.classList.remove('flipped');
-                c2.el.classList.remove('flipped');
-                flipped = [];
-                isLocked = false;
-            }, 1000);
+                // เฉลยตัวที่ถูก
+                document.querySelectorAll('.option-btn').forEach(b => {
+                    if (b.textContent.toLowerCase() === currentWord.correct.toLowerCase()) {
+                        b.classList.add('correct');
+                    }
+                });
+            }
+
+            // Enable Next Button
+            nextBtn.disabled = false;
+            nextBtn.style.opacity = "1";
         }
-    }
 
-    function endGame() {
-        clearInterval(timer);
-        document.getElementById('feedback').innerHTML = `<span class="msg-correct" style="font-size:1.2rem">🎉 ผ่านด่านแล้ว!</span>`;
-        document.getElementById('ctrl-play').style.display = 'none';
-        document.getElementById('ctrl-end').style.display = 'flex';
-        
-        if(currentLevel === 15) document.getElementById('btn-next').style.display = 'none';
-        else document.getElementById('btn-next').style.display = 'flex';
-    }
+        // --- EVENT LISTENERS ---
+        audioButton.onclick = () => {
+            if (audioPlayCount < MAX_REPLAY_COUNT && !isSpeaking) {
+                speakWord(currentWord.word.toLowerCase());
+                audioPlayCount++;
+                
+                let remaining = MAX_REPLAY_COUNT - audioPlayCount;
+                if(remaining > 0) feedbackMessageEl.textContent = `ฟังได้อีก ${remaining} ครั้ง`;
+                else feedbackMessageEl.textContent = "ครั้งสุดท้าย!";
+            }
+        };
 
-    // --- UTILS ---
-    function switchScreen(id) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        window.scrollTo(0,0);
-    }
+        nextBtn.onclick = () => {
+            currentQuizIndex++;
+            nextQuestion();
+        };
 
-    function goHome() {
-        clearInterval(timer);
-        window.speechSynthesis.cancel();
-        // Reset Theme to Menu (Yellow)
-        document.body.style.backgroundColor = '#FFF9C4';
-        document.querySelector('header').style.background = 'white';
-        document.querySelector('header h1').style.color = '#6C5CE7';
-        switchScreen('screen-select');
-    }
+        // --- INIT ---
+        window.addEventListener('DOMContentLoaded', () => {
+            createLevelButtons();
+            
+            // รอโหลดเสียง
+            if (synth.onvoiceschanged !== undefined) {
+                synth.onvoiceschanged = initTTS;
+            }
+            // เรียกเผื่อไว้
+            setTimeout(initTTS, 500);
+        });
 
-    function applyTheme(lvl) {
-        let bg, card, head;
-        if(lvl <= 4) { bg='#E3F2FD'; card='linear-gradient(135deg, #74b9ff, #0984e3)'; head='linear-gradient(135deg, #74b9ff, #0984e3)'; }
-        else if(lvl <= 8) { bg='#F3E5F5'; card='linear-gradient(135deg, #a29bfe, #6c5ce7)'; head='linear-gradient(135deg, #a29bfe, #6c5ce7)'; }
-        else if(lvl <= 10) { bg='#FFF3E0'; card='linear-gradient(135deg, #fab1a0, #e17055)'; head='linear-gradient(135deg, #fab1a0, #e17055)'; }
-        else if(lvl <= 12) { bg='#E0F2F1'; card='linear-gradient(135deg, #81ecec, #00cec9)'; head='linear-gradient(135deg, #81ecec, #00cec9)'; }
-        else { bg='#FFEBEE'; card='linear-gradient(135deg, #ff7675, #d63031)'; head='linear-gradient(135deg, #ff7675, #d63031)'; }
-        
-        document.body.style.backgroundColor = bg;
-        document.documentElement.style.setProperty('--card-theme', card);
-        document.querySelector('header').style.background = head;
-        document.querySelector('header h1').style.color = 'white';
-    }
-
-    // --- AUDIO ---
-    function speak(text) {
-        window.speechSynthesis.cancel();
-        const u = new SpeechSynthesisUtterance(text);
-        u.lang = 'en-US';
-        u.rate = 0.9;
-        window.speechSynthesis.speak(u);
-    }
-
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    function playBeep(freq, type='sine', dur=0.1) {
-        if(audioCtx.state === 'suspended') audioCtx.resume();
-        const o = audioCtx.createOscillator();
-        const g = audioCtx.createGain();
-        o.type = type;
-        o.frequency.value = freq;
-        g.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + dur);
-        o.connect(g); g.connect(audioCtx.destination);
-        o.start(); o.stop(audioCtx.currentTime + dur);
-    }
-
-    init();
-</script>
+    </script>
 </body>
 </html>
